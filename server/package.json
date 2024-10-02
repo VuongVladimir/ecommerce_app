@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "A new Flutter project.",
   "main": "index.js",
+  "engines": {
+    "node": "20.x"
+  },
   "directories": {
     "lib": "lib",
     "test": "test"

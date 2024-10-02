@@ -27,6 +27,11 @@ mongoose.connect(DB).then(() => {
     console.log("Failed to connect Mongodb");
 });
 
+app.get('/', (req, res) => {
+    res.send('Hello from Express!');
+  });
+  
+
 app.listen(PORT, "0.0.0.0" ,() => { 
     console.log(`connected at port ${PORT}`);
  });

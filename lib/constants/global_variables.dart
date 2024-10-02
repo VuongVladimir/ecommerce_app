@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-//String uri = "https://ecommerce-server-xi-sandy.vercel.app";
-String uri = "http://192.168.1.11:3000";
+String uri = "https://ecommerce-server-xi-sandy.vercel.app";
+//String uri = "http://192.168.1.11:3000";
 class GlobalVariables {
   // COLORS
   static const appBarGradient = LinearGradient(

@@ -38,7 +38,7 @@ class _DealOfDayState extends State<DealOfDay> {
                     alignment: Alignment.topLeft,
                     padding: const EdgeInsets.only(left: 10, top: 15),
                     child: const Text(
-                      'Deal of the day',
+                      'Deal of the day',aaaaaaaa
                       style: TextStyle(fontSize: 20),
                     ),
                   ),

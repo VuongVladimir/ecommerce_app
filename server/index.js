@@ -10,7 +10,7 @@ const userRouter = require("./routes/user");
 // INIT
 const PORT = process.env.PORT || 3000;
 const app = express();
-const DB = "mongodb+srv://sugartank:super156789@cluster0.5xpcm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const DB = process.env.MONGODB_URL || "mongodb+srv://sugartank:super156789@cluster0.5xpcm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 // middleware
 app.use(express.json());
 app.use(authRouter);

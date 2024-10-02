@@ -67,52 +67,107 @@ adminRouter.post("/admin/change-order-status", admin, async (req, res) => {
     }
 });
 
+// test cursor
 adminRouter.get("/admin/analytics", admin, async (req, res) => {
     try {
-        const orderList = await Order.find({});
+        const orders = await Order.find({}).populate('products.product');
         let totalEarnings = 0;
+        let categoryEarnings = {
+            Mobiles: 0,
+            Essentials: 0,
+            Appliances: 0,
+            Books: 0,
+            Fashion: 0
+        };
 
-        for (let i = 0; i < orderList.length; i++) {
-            totalEarnings += orderList[i].totalPrice;
-        }
-        // CATEGORY WISE ORDER FETCHING
-        let mobileEarnings = await fetchCategoryWiseProduct("Mobiles");
-        let essentialEarnings = await fetchCategoryWiseProduct("Essentials");
-        let applianceEarnings = await fetchCategoryWiseProduct("Appliances");
-        let booksEarnings = await fetchCategoryWiseProduct("Books");
-        let fashionEarnings = await fetchCategoryWiseProduct("Fashion");
+        // orders.forEach(order => {
+        //     totalEarnings += order.totalPrice;
+        //     order.products.forEach(item => {
+        //         if (categoryEarnings.hasOwnProperty(item.product.category)) {
+        //             categoryEarnings[item.product.category] += item.quantity * item.product.price;
+        //         }
+        //     });
+        // });
+        orders.forEach(order => {
+            console.error("Order:", order._id, "Total Price:", order.totalPrice);
+            totalEarnings += order.totalPrice;
+            order.products.forEach(item => {
+                console.error("Product:", item.product.name, "Category:", item.product.category, "Price:", item.product.price, "Quantity:", item.quantity);
+                if (categoryEarnings.hasOwnProperty(item.product.category)) {
+                    categoryEarnings[item.product.category] += item.quantity * item.product.price;
+                } else {
+                    console.error("Unknown category:", item.product.category);
+                }
+            });
+        });
+        console.error("Total Earnings:", totalEarnings);
+        console.error("Category Earnings:", categoryEarnings);
+
+
 
         let earnings = {
             totalEarnings,
-            mobileEarnings,
-            essentialEarnings,
-            applianceEarnings,
-            booksEarnings,
-            fashionEarnings,
+            mobileEarnings: categoryEarnings.Mobiles,
+            essentialEarnings: categoryEarnings.Essentials,
+            applianceEarnings: categoryEarnings.Appliances,
+            booksEarnings: categoryEarnings.Books,
+            fashionEarnings: categoryEarnings.Fashion,
         };
-
+        
         res.json(earnings);
     } catch (e) {
         res.status(500).json({ error: e.message });
     }
 });
 
-async function fetchCategoryWiseProduct(category) {
-    let earnings = 0;
-    let categoryOrders = await Order.find({
-        "products.product.category": category,
-    });
+// Xóa hàm fetchCategoryWiseProduct vì không cần thiết nữa
 
-    for (let i = 0; i < categoryOrders.length; i++) {
-        for (let j = 0; j < categoryOrders[i].products.length; j++) {
-            earnings +=
-                categoryOrders[i].products[j].quantity *
-                categoryOrders[i].products[j].product.price;
-        }
-    }
-    console.log(`${category} ${earnings}`);
-    return earnings;
-}
+// adminRouter.get("/admin/analytics", admin, async (req, res) => {
+//     try {
+//         const orderList = await Order.find({});
+//         let totalEarnings = 0;
+
+//         for (let i = 0; i < orderList.length; i++) {
+//             totalEarnings += orderList[i].totalPrice;
+//         }
+//         // CATEGORY WISE ORDER FETCHING
+//         let mobileEarnings = await fetchCategoryWiseProduct("Mobiles");
+//         let essentialEarnings = await fetchCategoryWiseProduct("Essentials");
+//         let applianceEarnings = await fetchCategoryWiseProduct("Appliances");
+//         let booksEarnings = await fetchCategoryWiseProduct("Books");
+//         let fashionEarnings = await fetchCategoryWiseProduct("Fashion");
+
+//         let earnings = {
+//             totalEarnings,
+//             mobileEarnings,
+//             essentialEarnings,
+//             applianceEarnings,
+//             booksEarnings,
+//             fashionEarnings,
+//         };
+
+//         res.json(earnings);
+//     } catch (e) {
+//         res.status(500).json({ error: e.message });
+//     }
+// });
+
+// async function fetchCategoryWiseProduct(category) {
+//     let earnings = 0;
+//     let categoryOrders = await Order.find({
+//         "products.product.category": category,
+//     });
+
+//     for (let i = 0; i < categoryOrders.length; i++) {
+//         for (let j = 0; j < categoryOrders[i].products.length; j++) {
+//             earnings +=
+//                 categoryOrders[i].products[j].quantity *
+//                 categoryOrders[i].products[j].product.price;
+//         }
+//     }
+//     console.log(`${category} ${earnings}`);
+//     return earnings;
+// }
 
 // update product
 adminRouter.post("/admin/update-product", admin, async (req, res) => {

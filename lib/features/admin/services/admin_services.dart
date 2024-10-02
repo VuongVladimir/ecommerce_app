@@ -212,6 +212,11 @@ class AdminServices {
             Sales(label: 'Books', earning: response['booksEarnings']),
             Sales(label: 'Fashion', earning: response['fashionEarnings']),
           ];
+
+          print('Total Earnings: \$${totalEarnings.toStringAsFixed(2)}');
+        for (var sale in sales) {
+          print('${sale.label}: \$${sale.earning.toStringAsFixed(2)}');
+        }
         },
       );
     } catch (e) {

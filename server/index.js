@@ -8,7 +8,7 @@ const productRouter = require("./routes/product");
 const userRouter = require("./routes/user");
 
 // INIT
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 const app = express();
 const DB = "mongodb+srv://sugartank:super156789@cluster0.5xpcm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 // middleware
@@ -32,6 +32,6 @@ app.get('/', (req, res) => {
   });
   
 
-app.listen(PORT, "0.0.0.0" ,() => { 
+  app.listen(PORT, () => { 
     console.log(`connected at port ${PORT}`);
- });
+});

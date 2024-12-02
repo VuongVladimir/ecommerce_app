@@ -69,4 +69,52 @@ authRouter.get('/', auth, async (req, res) => {
     const user = await User.findById(req.user);
     res.json({ ...user._doc, token: req.token });
 });
+
+
+authRouter.post("/api/reset-password", async (req, res) => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(400).json({ msg: "User with this email does not exist!" });
+        }
+
+        
+        const resetToken = jwt.sign(
+            { id: user._id },
+            "passwordResetKey",
+            { expiresIn: '1h' }
+        );
+
+        res.json({ resetToken });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
+// Update Password Route
+authRouter.post("/api/update-password", async (req, res) => {
+    try {
+        const { resetToken, newPassword } = req.body;
+        if (newPassword.length < 6) {
+            return res.status(400).json({ msg: "Password must be at least 6 characters" });
+        }
+
+        const verified = jwt.verify(resetToken, "passwordResetKey");
+        if (!verified) {
+            return res.status(400).json({ msg: "Invalid or expired reset token" });
+        }
+
+        const hashedPassword = await bcryptjs.hash(newPassword, 8);
+        await User.findByIdAndUpdate(
+            verified.id,
+            { password: hashedPassword }
+        );
+
+        res.json({ msg: "Password updated successfully" });
+    } catch (e) {
+        res.status(500).json({ error: e.message });
+    }
+});
+
 module.exports = authRouter;

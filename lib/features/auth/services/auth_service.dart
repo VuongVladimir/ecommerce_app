@@ -131,4 +131,77 @@ class AuthService {
       }
     }
   }
+
+  // reset password request
+  Future<String?> resetPassword({
+  required BuildContext context,
+  required String email,
+}) async {
+  try {
+    http.Response res = await http.post(
+      Uri.parse('$uri/api/reset-password'),
+      body: jsonEncode({'email': email}),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+    );
+
+    if (!context.mounted) return null;
+    
+    String? token;
+    httpErrorHandle(
+      response: res,
+      context: context,
+      onSuccess: () {
+        showSnackBar(
+          context,
+          'Reset token generated successfully!',
+        );
+        // Lấy token từ response
+        token = jsonDecode(res.body)['resetToken'];
+      },
+    );
+    return token;
+  } catch (e) {
+    if (context.mounted) {
+      showSnackBar(context, e.toString());
+    }
+    return null;
+  }
+}
+
+  // update password
+  Future<void> updatePassword({
+    required BuildContext context,
+    required String resetToken,
+    required String newPassword,
+  }) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/update-password'),
+        body: jsonEncode({
+          'resetToken': resetToken,
+          'newPassword': newPassword,
+        }),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
+
+      if (!context.mounted) return;
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, 'Password updated successfully!');
+          Navigator.pop(context); // Quay lại màn hình đăng nhập
+        },
+      );
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
+    }
+  }
+
 }

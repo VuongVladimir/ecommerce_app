@@ -42,12 +42,27 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       title: 'E-commerce App Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: GlobalVariables.backgroundColor,
-          background: GlobalVariables.backgroundColor,
-        ),
-        useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: GlobalVariables.primaryColor,
+        primary: GlobalVariables.primaryColor,
+        secondary: GlobalVariables.secondaryColor,
+        background: GlobalVariables.backgroundColor,
       ),
+      // Thêm các thuộc tính theme khác
+      appBarTheme: const AppBarTheme(
+        elevation: 0,
+        iconTheme: IconThemeData(
+          color: Colors.black,
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: GlobalVariables.primaryColor,
+          foregroundColor: Colors.white,
+        ),
+      ),
+      useMaterial3: true,
+    ),
       onGenerateRoute: (settings) => generateRoute(settings),
       home: (Provider.of<UserProvider>(context).user.token.isNotEmpty)
           ? (Provider.of<UserProvider>(context).user.type == "user")

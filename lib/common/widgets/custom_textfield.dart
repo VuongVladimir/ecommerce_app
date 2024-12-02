@@ -1,37 +1,72 @@
 import 'package:flutter/material.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final TextEditingController textController;
   final String hintText;
   final int maxLines;
+  final bool isPass;
+
   const CustomTextField({
     super.key,
     required this.textController,
     required this.hintText,
     this.maxLines = 1,
+    this.isPass = false,
   });
+
+  @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  bool _isHidden = true;
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: textController,
+      controller: widget.textController,
       decoration: InputDecoration(
-        hintText: hintText,
+        hintText: widget.hintText,
         border: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black54),
         ),
         enabledBorder: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black54),
         ),
+        // Thêm prefixIcon dựa vào loại input
+        prefixIcon: Icon(
+          widget.isPass
+              ? Icons.lock_outline
+              : widget.hintText.toLowerCase().contains('email')
+                  ? Icons.email_outlined
+                  : widget.hintText.toLowerCase().contains('name')
+                      ? Icons.person_outline
+                      : Icons.text_fields,
+          color: Colors.grey,
+        ),
+        // Thêm suffixIcon cho trường password
+        suffixIcon: widget.isPass
+            ? IconButton(
+                icon: Icon(
+                  _isHidden ? Icons.visibility_off : Icons.visibility,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                  setState(() {
+                    _isHidden = !_isHidden;
+                  });
+                },
+              )
+            : null,
       ),
       validator: (val) {
         if (val == null || val.isEmpty) {
-          return "Enter your $hintText";
+          return "Enter your ${widget.hintText}";
         }
         return null;
       },
-      obscureText: (hintText == 'Password') ? true : false,
-      maxLines: maxLines,
+      obscureText: widget.isPass && _isHidden,
+      maxLines: widget.maxLines,
     );
   }
 }

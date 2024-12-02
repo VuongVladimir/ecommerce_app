@@ -139,11 +139,12 @@ class _AuthScreenState extends State<AuthScreen> {
               const EdgeInsets.symmetric(horizontal: 25), // Increased padding
           child: Column(
             children: [
-              const SizedBox(height: 70), // Increased top spacing
+              const SizedBox(height: 100), // Increased top spacing
               // Logo Amazon
               Image.asset(
                 'assets/images/amazon_in.png',
-                height: 45,
+                height: 80,
+                color: Colors.black,
               ),
               const SizedBox(height: 35), // Increased spacing
 

@@ -26,15 +26,16 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            productList.add(
-              Product.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
-              ),
-            );
-          }
+          var jsonData = jsonDecode(res.body) as List;
+          productList = jsonData.map((item) {
+            // Chuyển đổi sellerId từ Map thành các trường riêng lẻ
+            if (item['sellerId'] != null && item['sellerId'] is Map) {
+              item['shopName'] = item['sellerId']['shopName']?.toString() ?? '';
+              item['shopAvatar'] = item['sellerId']['shopAvatar']?.toString() ?? '';
+              item['sellerId'] = item['sellerId']['_id']?.toString() ?? '';
+            }
+            return Product.fromMap(item);
+          }).toList();
         },
       );
     } catch (e) {
@@ -58,15 +59,16 @@ class HomeServices {
         response: res,
         context: context,
         onSuccess: () {
-          for (int i = 0; i < jsonDecode(res.body).length; i++) {
-            productList.add(
-              Product.fromJson(
-                jsonEncode(
-                  jsonDecode(res.body)[i],
-                ),
-              ),
-            );
-          }
+          var jsonData = jsonDecode(res.body) as List;
+          productList = jsonData.map((item) {
+            // Chuyển đổi sellerId từ Map thành các trường riêng lẻ
+            if (item['sellerId'] != null && item['sellerId'] is Map) {
+              item['shopName'] = item['sellerId']['shopName']?.toString() ?? '';
+              item['shopAvatar'] = item['sellerId']['shopAvatar']?.toString() ?? '';
+              item['sellerId'] = item['sellerId']['_id']?.toString() ?? '';
+            }
+            return Product.fromMap(item);
+          }).toList();
         },
       );
     } catch (e) {

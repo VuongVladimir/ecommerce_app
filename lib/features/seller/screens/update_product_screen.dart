@@ -6,7 +6,7 @@ import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_button.dart';
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_textfield.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/utils.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/services/admin_services.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/services/seller_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/product.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +24,7 @@ class _AddProductScreenState extends State<UpdateProductScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-  final AdminServices adminServices = AdminServices();
+  final SellerServices sellerServices = SellerServices();
 
   List<File> newImages = [];
   List<String> images = [];
@@ -84,7 +84,7 @@ class _AddProductScreenState extends State<UpdateProductScreen> {
         priceController.text.isNotEmpty ||
         quantityController.text.isNotEmpty ||
         newImages.isNotEmpty || category != widget.product.category) {
-      adminServices.updateProduct(
+      sellerServices.updateProduct(
         context: context,
         product: widget.product,
         images: images,

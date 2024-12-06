@@ -1,14 +1,13 @@
-import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/account/services/account_services.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/analytics_screen.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/orders_screen.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/products_screen.dart';
 import 'package:flutter/material.dart';
-
+import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/seller_requests_screen.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/sellers_screen.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/analytics_screen.dart';
 
 class AdminScreen extends StatefulWidget {
-  static const String routeName = '/admin-home';
-  const AdminScreen({super.key});
+  static const String routeName = '/admin-screen';
+  const AdminScreen({Key? key}) : super(key: key);
 
   @override
   State<AdminScreen> createState() => _AdminScreenState();
@@ -18,12 +17,14 @@ class _AdminScreenState extends State<AdminScreen> {
   int _page = 0;
   double bottomBarWidth = 42;
   double bottomBarBorderWidth = 5;
+
   List<Widget> pages = [
-    const ProductsScreen(),
+    const SellerRequestsScreen(),
+    const SellersScreen(),
     const AnalyticsScreen(),
-    const OrdersScreen(),
   ];
-  void updatePage(int page){
+
+  void updatePage(int page) {
     setState(() {
       _page = page;
     });
@@ -41,40 +42,28 @@ class _AdminScreenState extends State<AdminScreen> {
             ),
           ),
           title: Row(
-            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Expanded(
-                child: Container(
-                  alignment: Alignment.topLeft,
-                  child: Image.asset(
-                    'assets/images/amazon_in.png',
-                    width: 120,
-                    height: 45,
-                    color: Colors.black,
-                  ),
-                ),
-              ),
-              const Text(
-                'Admin',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+              const Expanded(
+                child: Text(
+                  'Admin Dashboard',
+                  style: TextStyle(
+                      color: Colors.black, fontWeight: FontWeight.w800),
                 ),
               ),
               PopupMenuButton(
-              icon: Icon(Icons.arrow_drop_down),
-              onSelected: (value) {
-                if (value == 'logout') {
-                  AccountServices().logOut(context);
-                }
-              },
-              itemBuilder: (context) => [
-                const PopupMenuItem(
-                  value: 'logout',
-                  child: Text('Log out'),
-                ),
-              ],
-            ),
+                icon: const Icon(Icons.arrow_drop_down),
+                onSelected: (value) {
+                  if (value == 'logout') {
+                    AccountServices().logOut(context);
+                  }
+                },
+                itemBuilder: (context) => [
+                  const PopupMenuItem(
+                    value: 'logout',
+                    child: Text('Log out'),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
@@ -101,9 +90,9 @@ class _AdminScreenState extends State<AdminScreen> {
                   ),
                 ),
               ),
-              child: const Icon(Icons.home_outlined),
+              child: const Icon(Icons.person_add),
             ),
-            label: '',
+            label: 'Requests',
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -118,9 +107,9 @@ class _AdminScreenState extends State<AdminScreen> {
                   ),
                 ),
               ),
-              child: const Icon(Icons.analytics_outlined),
+              child: const Icon(Icons.people),
             ),
-            label: '',
+            label: 'Sellers',
           ),
           BottomNavigationBarItem(
             icon: Container(
@@ -135,9 +124,9 @@ class _AdminScreenState extends State<AdminScreen> {
                   ),
                 ),
               ),
-              child: const Icon(Icons.all_inbox_outlined),
+              child: const Icon(Icons.analytics),
             ),
-            label: '',
+            label: 'Analytics',
           ),
         ],
       ),

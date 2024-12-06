@@ -5,6 +5,7 @@ import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/utils.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/auth/screens/auth_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/order.dart';
+import 'package:ecommerce_app_fluterr_nodejs/models/user.dart';
 import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -44,12 +45,16 @@ class AccountServices {
     return orderList;
   }
 
+  
+
   // log out
   void logOut(BuildContext context) async {
     try {
-      SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+      SharedPreferences sharedPreferences =
+          await SharedPreferences.getInstance();
       await sharedPreferences.setString('x-auth-token', '');
-      Navigator.pushNamedAndRemoveUntil(context, AuthScreen.routeName, (route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+          context, AuthScreen.routeName, (route) => false);
     } catch (e) {
       showSnackBar(context, e.toString());
     }

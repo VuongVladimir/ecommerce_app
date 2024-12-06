@@ -8,7 +8,7 @@ const admin = async (req, res, next) => {
         const verified = jwt.verify(token, "passwordKey");
         if(!verified) return res.status(401).json({msg: "Token verification failed, authorization denied"});
         const user = await User.findById(verified.id);
-        if(user.type !== "admin") {
+        if(user.type !== "seller") {
             return res.status(401).json({msg: "You are not an admin!"});
         }
         req.user = verified.id;

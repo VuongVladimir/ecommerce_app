@@ -7,8 +7,8 @@ const ratingSchema = require("../models/rating");
 // /api/products?category=TV (lenh get tham so nam trong link)
 productRouter.get("/api/products", auth, async (req, res) => {
     try {
-        //console.log(req.query.category);
-        const products = await Product.find({ category: req.query.category });
+        const products = await Product.find({ category: req.query.category })
+            .populate('sellerId', 'shopName shopAvatar');
         res.json(products);
     } catch (e) {
         res.status(500).json({ error: e.message });
@@ -20,7 +20,7 @@ productRouter.get("/api/products/search/:name", auth, async (req, res) => {
     try {
         const products = await Product.find({
             name: { $regex: req.params.name, $options: "i" },
-        });
+        }).populate('sellerId', 'shopName shopAvatar');
         res.json(products);
     } catch (e) {
         res.status(500).json({ error: e.message });
@@ -63,7 +63,7 @@ productRouter.post("/api/rate-product", auth, async (req, res) => {
 // Deal of the day
 productRouter.get("/api/deal-of-day", auth, async (req, res) => {
     try {
-        let products = await Product.find({ avgRating: { $gte: 4 } }).sort({ avgRating: -1 });
+        let products = await Product.find({ avgRating: { $gte: 4 } }).sort({ avgRating: -1 }).populate('sellerId', 'shopName shopAvatar');
 
         res.json(products);
     } catch (e) {

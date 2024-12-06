@@ -32,82 +32,153 @@ class _DealOfDayState extends State<DealOfDay> {
         ? const Center(child: CircularProgressIndicator())
         : productList!.isEmpty
             ? const SizedBox()
-            : Column(
-                children: [
-                  Container(
-                    alignment: Alignment.topLeft,
-                    padding: const EdgeInsets.only(left: 10, top: 15),
-                    child: const Text(
-                      'Deal of the day',
-                      style: TextStyle(fontSize: 20),
+            : Container(
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Deal of the day',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              // Xử lý khi nhấn "See all"
+                            },
+                            child: Text(
+                              'See all',
+                              style: TextStyle(
+                                color: Colors.cyan[800],
+                                fontSize: 16,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.pushNamed(
-                        context,
-                        ProductDetailsScreen.routeName,
-                        arguments: productList![0],
-                      );
-                    },
-                    child: Image.network(
-                      productList![0].images[0],
-                      height: 235,
-                      width: double.infinity,
-                      fit: BoxFit.fitHeight,
+                    const SizedBox(height: 12),
+                    InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                          context,
+                          ProductDetailsScreen.routeName,
+                          arguments: productList![0],
+                        );
+                      },
+                      child: Container(
+                        margin: const EdgeInsets.symmetric(horizontal: 16),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          gradient: const LinearGradient(
+                            colors: [Colors.blueAccent, Colors.cyan],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.3),
+                              spreadRadius: 2,
+                              blurRadius: 5,
+                              offset: const Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            productList![0].images[0],
+                            height: 235,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    padding: const EdgeInsets.only(left: 15),
-                    child: const Text(
-                      '\$999',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '\$${productList![0].price}',
+                            style: const TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.cyan,
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            productList![0].name,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  Container(
-                    alignment: Alignment.topLeft,
-                    padding: const EdgeInsets.only(top: 5, left: 15, right: 40),
-                    child: const Text(
-                      'Iphone',
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
+                    const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'More deals for you',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: productList!
-                          .map(
-                            (i) => InkWell(
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 180,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: productList!.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: InkWell(
                               onTap: () {
                                 Navigator.pushNamed(
                                   context,
                                   ProductDetailsScreen.routeName,
-                                  arguments: i,
+                                  arguments: productList![index],
                                 );
                               },
-                              child: Image.network(i.images[0],
-                                  fit: BoxFit.fitWidth,
-                                  width: 150,
-                                  height: 150),
+                              child: Container(
+                                width: 175,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8),
+                                  border: Border.all(
+                                    color: Colors.grey.withOpacity(0.2),
+                                  ),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(8),
+                                  child: Image.network(
+                                    productList![index].images[0],
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
                             ),
-                          )
-                          .toList(),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.only(left: 15, top: 15, bottom: 15),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'See all deals',
-                      style: TextStyle(color: Colors.cyan[800]),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               );
   }
 }

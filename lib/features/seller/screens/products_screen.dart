@@ -1,7 +1,7 @@
 import 'package:ecommerce_app_fluterr_nodejs/features/account/widgets/single_product.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/add_product_screen.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/update_product_screen.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/services/admin_services.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/add_product_screen.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/update_product_screen.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/services/seller_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/product.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +14,7 @@ class ProductsScreen extends StatefulWidget {
 
 class _PostsScreenState extends State<ProductsScreen> {
   List<Product>? products;
-  final AdminServices adminServices = AdminServices();
+  final SellerServices sellerServices = SellerServices();
 
   @override
   void initState() {
@@ -24,12 +24,12 @@ class _PostsScreenState extends State<ProductsScreen> {
   }
 
   getAllProducts() async {
-    products = await adminServices.fetchAllProducts(context);
+    products = await sellerServices.fetchAllProducts(context);
     setState(() {});
   }
 
   void deleteProduct(Product product, int index) {
-    adminServices.deleteProduct(
+    sellerServices.deleteProduct(
       context: context,
       product: product,
       onSuccess: () {
@@ -50,46 +50,59 @@ class _PostsScreenState extends State<ProductsScreen> {
               shrinkWrap: true,
               itemCount: products!.length,
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
+              crossAxisCount: 2,
+              crossAxisSpacing: 8.0, // Add spacing between columns
+              mainAxisSpacing: 8.0,  // Add spacing between rows
+            ),
               itemBuilder: (context, index) {
                 final productData = products![index];
-                return Column(
+                return Card(
+                elevation: 2, 
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Column(
                   children: [
-                    // SizedBox(
-                    //   height: 140,
-                    //   child: SingleProduct(image: productData.images[0]),
-                    // ),
                     Expanded(
                       child: InkWell(
                         onTap: () {
-                          Navigator.pushNamed(context, UpdateProductScreen.routeName, arguments: productData);
+                          Navigator.pushNamed(
+                            context,
+                            UpdateProductScreen.routeName,
+                            arguments: productData,
+                          );
                         },
                         child: SingleProduct(
                           image: productData.images[0],
                         ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 11),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
                             child: Text(
                               productData.name,
                               overflow: TextOverflow.ellipsis,
                               maxLines: 2,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold, // Bold text
+                                fontSize: 16, // Larger font size
+                              ),
                             ),
                           ),
-                        ),
-                        IconButton(
-                          onPressed: () => deleteProduct(productData, index),
-                          icon: const Icon(Icons.delete_outline),
-                        ),
-                      ],
-                    )
+                          IconButton(
+                            onPressed: () => deleteProduct(productData, index),
+                            icon: const Icon(Icons.delete_outline),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
-                );
+                ),
+              );
               },
             ),
             floatingActionButton: FloatingActionButton(

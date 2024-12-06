@@ -9,6 +9,11 @@ class User {
   final String type;
   final String token;
   final List<dynamic> cart;
+  final String shopName; 
+  final String shopDescription; 
+  final String shopAvatar;
+  final List<String> followers; // Thêm field mới
+  final List<String> following; // Thêm field mới
 
   User({
     required this.id,
@@ -19,9 +24,13 @@ class User {
     required this.type,
     required this.token,
     required this.cart,
+    this.shopName = '',
+    this.shopDescription = '',
+    this.shopAvatar = '',
+    this.followers = const [], // Default value
+    this.following = const [], // Default value
   });
 
-  // Chuyển đổi User thành Map<String, dynamic>
   Map<String, dynamic> toMap() {
     return {
       '_id': id,
@@ -32,10 +41,14 @@ class User {
       'type': type,
       'token': token,
       'cart': cart,
+      'shopName': shopName,
+      'shopDescription': shopDescription,
+      'shopAvatar': shopAvatar,
+      'followers': followers,
+      'following': following,
     };
   }
 
-  // Chuyển đổi Map<String, dynamic> thành User
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
       id: map['_id'] ?? '',
@@ -50,13 +63,16 @@ class User {
           (x) => Map<String, dynamic>.from(x),
         ),
       ),
+      shopName: map['shopName'] ?? '',
+      shopDescription: map['shopDescription'] ?? '',
+      shopAvatar: map['shopAvatar'] ?? '',
+      followers: List<String>.from(map['followers'] ?? []), // Convert followers
+      following: List<String>.from(map['following'] ?? []), // Convert following
     );
   }
 
-  // Chuyển đổi User thành chuỗi JSON
   String toJson() => json.encode(toMap());
 
-  // Chuyển đổi chuỗi JSON thành User
   factory User.fromJson(String source) => User.fromMap(json.decode(source));
 
   User copyWith({
@@ -68,6 +84,11 @@ class User {
     String? type,
     String? token,
     List<dynamic>? cart,
+    String? shopName,
+    String? shopDescription,
+    String? shopAvatar,
+    List<String>? followers,
+    List<String>? following,
   }) {
     return User(
       id: id ?? this.id,
@@ -78,6 +99,16 @@ class User {
       type: type ?? this.type,
       token: token ?? this.token,
       cart: cart ?? this.cart,
+      shopName: shopName ?? this.shopName,
+      shopDescription: shopDescription ?? this.shopDescription,
+      shopAvatar: shopAvatar ?? this.shopAvatar,
+      followers: followers ?? this.followers,
+      following: following ?? this.following,
     );
+  }
+
+  // Helper method để kiểm tra xem user có đang follow một seller không
+  bool isFollowing(String sellerId) {
+    return following.contains(sellerId);
   }
 }

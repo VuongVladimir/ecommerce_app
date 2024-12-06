@@ -124,18 +124,16 @@ class _SearchScreenState extends State<SearchScreen> {
                   child: ListView.builder(
                     itemCount: productList!.length,
                     itemBuilder: (context, index) {
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.pushNamed(
-                              context,
-                              ProductDetailsScreen.routeName,
-                              arguments: productList![index],
-                            );
-                          } ,
-                          child: SearchedProduct(
-                            product: productList![index],
-                          ),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            ProductDetailsScreen.routeName,
+                            arguments: productList![index],
+                          );
+                        },
+                        child: SearchedProduct(
+                          product: productList![index],
                         ),
                       );
                     },

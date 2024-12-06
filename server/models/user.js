@@ -31,7 +31,20 @@ const userSchema = mongoose.Schema({
     },
     type: {
         type: String,
+        enum: ['user', 'seller', 'admin'],
         default: "user",
+    },
+    shopName: {
+        type: String,
+        default: "",
+    },
+    shopDescription: {
+        type: String,
+        default: "",
+    },
+    shopAvatar: {
+        type: String,
+        default: "",
     },
     // cart
     cart: [
@@ -43,6 +56,14 @@ const userSchema = mongoose.Schema({
             }
         },
     ],
+    followers: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
+    following: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+    }],
 });
 
 const User = mongoose.model("User", userSchema);

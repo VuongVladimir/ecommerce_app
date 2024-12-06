@@ -24,8 +24,8 @@ class _AddressScreenState extends State<AddressScreen> {
   final _addressFormKey = GlobalKey<FormState>();
   String addressToBeUsed = "";
 
-  // final Future<PaymentConfiguration> _googlePayConfigFuture =
-  //     PaymentConfiguration.fromAsset('gpay.json');
+  final Future<PaymentConfiguration> _googlePayConfigFuture =
+      PaymentConfiguration.fromAsset('gpay.json');
 
   List<PaymentItem> paymentItems = [];
   final AddressServices addressServices = AddressServices();
@@ -33,13 +33,13 @@ class _AddressScreenState extends State<AddressScreen> {
   @override
   void initState() {
     super.initState();
-    // paymentItems.add(
-    //   PaymentItem(
-    //     amount: widget.totalAmount,
-    //     label: "Total Amount",
-    //     status: PaymentItemStatus.final_price,
-    //   ),
-    // );
+    paymentItems.add(
+      PaymentItem(
+        amount: widget.totalAmount,
+        label: "Total Amount",
+        status: PaymentItemStatus.final_price,
+      ),
+    );
   }
 
   @override
@@ -173,25 +173,25 @@ class _AddressScreenState extends State<AddressScreen> {
                   ],
                 ),
               ),
-              // FutureBuilder<PaymentConfiguration>(
-              //   future: _googlePayConfigFuture,
-              //   builder: (context, snapshot) => snapshot.hasData
-              //       ? GooglePayButton(
-              //           onPressed: () => payPressed(address),
-              //           paymentConfiguration: snapshot.data!,
-              //           paymentItems: paymentItems,
-              //           type: GooglePayButtonType.buy,
-              //           margin: const EdgeInsets.only(top: 15.0),
-              //           onPaymentResult: onGooglePayResult,
-              //           height: 75,
-              //           width: double.infinity,
-              //           theme: GooglePayButtonTheme.dark,
-              //           loadingIndicator: const Center(
-              //             child: CircularProgressIndicator(),
-              //           ),
-              //         )
-              //       : const SizedBox.shrink(),
-              // ),
+              FutureBuilder<PaymentConfiguration>(
+                future: _googlePayConfigFuture,
+                builder: (context, snapshot) => snapshot.hasData
+                    ? GooglePayButton(
+                        onPressed: () => payPressed(address),
+                        paymentConfiguration: snapshot.data!,
+                        paymentItems: paymentItems,
+                        type: GooglePayButtonType.buy,
+                        margin: const EdgeInsets.only(top: 15.0),
+                        onPaymentResult: onGooglePayResult,
+                        height: 75,
+                        width: double.infinity,
+                        theme: GooglePayButtonTheme.dark,
+                        loadingIndicator: const Center(
+                          child: CircularProgressIndicator(),
+                        ),
+                      )
+                    : const SizedBox.shrink(),
+              ),
             ],
           ),
         ),

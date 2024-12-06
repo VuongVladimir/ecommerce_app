@@ -1,3 +1,4 @@
+import 'package:ecommerce_app_fluterr_nodejs/common/widgets/product_card.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/account/widgets/single_product.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/home/services/home_services.dart';
@@ -68,9 +69,14 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                 Expanded(
                   child: GridView.builder(
                     itemCount: productList!.length,
+                    padding: const EdgeInsets.all(8),
                     gridDelegate:
                         const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.75,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ),
                     itemBuilder: (context, index) {
                       final product = productList![index];
                       return GestureDetector(
@@ -81,24 +87,26 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                             arguments: product,
                           );
                         },
-                        child: Column(
-                          children: [
-                            // SizedBox(
-                            //   height: 140,
-                            //   child: SingleProduct(image: productData.images[0]),
-                            // ),
-                            Flexible(child: SingleProduct(image: product.images[0])),
-                            Container(
-                              alignment: Alignment.topLeft,
-                              padding: const EdgeInsets.only(left: 11),
-                              child: Text(
-                                product.name,
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 2,
-                              ),
-                            ),
-                          ],
-                        ),
+                        // child: Column(
+                        //   children: [
+                        //     // SizedBox(
+                        //     //   height: 140,
+                        //     //   child: SingleProduct(image: productData.images[0]),
+                        //     // ),
+                        //     Flexible(
+                        //         child: SingleProduct(image: product.images[0])),
+                        //     Container(
+                        //       alignment: Alignment.topLeft,
+                        //       padding: const EdgeInsets.only(left: 11),
+                        //       child: Text(
+                        //         product.name,
+                        //         overflow: TextOverflow.ellipsis,
+                        //         maxLines: 2,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        child: ProductCard(product: product),
                       );
                     },
                   ),

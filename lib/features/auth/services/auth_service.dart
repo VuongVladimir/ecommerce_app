@@ -4,6 +4,7 @@ import 'package:ecommerce_app_fluterr_nodejs/constants/error_handling.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/utils.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/admin_screen.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/seller_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/user.dart';
 import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -75,12 +76,15 @@ class AuthService {
           SharedPreferences prefs = await SharedPreferences.getInstance();
           Provider.of<UserProvider>(context, listen: false).setUser(res.body);
           await prefs.setString('x-auth-token', jsonDecode(res.body)['token']);
-          final userProvider = Provider.of<UserProvider>(context, listen: false);
+          final userProvider =
+              Provider.of<UserProvider>(context, listen: false);
           Navigator.pushNamedAndRemoveUntil(
             context,
             (userProvider.user.type == "user")
                 ? BottomBar.routeName
-                : AdminScreen.routeName,
+                : (userProvider.user.type == "seller")
+                    ? SellerScreen.routeName
+                    : AdminScreen.routeName,
             (route) => false,
           );
           // Navigator.pushNamedAndRemoveUntil(
@@ -134,41 +138,41 @@ class AuthService {
 
   // reset password request
   Future<String?> resetPassword({
-  required BuildContext context,
-  required String email,
-}) async {
-  try {
-    http.Response res = await http.post(
-      Uri.parse('$uri/api/reset-password'),
-      body: jsonEncode({'email': email}),
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
-      },
-    );
+    required BuildContext context,
+    required String email,
+  }) async {
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/reset-password'),
+        body: jsonEncode({'email': email}),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+      );
 
-    if (!context.mounted) return null;
-    
-    String? token;
-    httpErrorHandle(
-      response: res,
-      context: context,
-      onSuccess: () {
-        showSnackBar(
-          context,
-          'Reset token generated successfully!',
-        );
-        // Lấy token từ response
-        token = jsonDecode(res.body)['resetToken'];
-      },
-    );
-    return token;
-  } catch (e) {
-    if (context.mounted) {
-      showSnackBar(context, e.toString());
+      if (!context.mounted) return null;
+
+      String? token;
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(
+            context,
+            'Reset token generated successfully!',
+          );
+          // Lấy token từ response
+          token = jsonDecode(res.body)['resetToken'];
+        },
+      );
+      return token;
+    } catch (e) {
+      if (context.mounted) {
+        showSnackBar(context, e.toString());
+      }
+      return null;
     }
-    return null;
   }
-}
 
   // update password
   Future<void> updatePassword({
@@ -203,5 +207,4 @@ class AuthService {
       }
     }
   }
-
 }

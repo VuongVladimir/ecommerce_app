@@ -6,8 +6,10 @@ import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_button.dart';
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_textfield.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/utils.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/services/admin_services.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/services/seller_services.dart';
+import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AddProductScreen extends StatefulWidget {
   static const String routeName = '/add-product';
@@ -22,7 +24,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController priceController = TextEditingController();
   final TextEditingController quantityController = TextEditingController();
-  final AdminServices adminServices = AdminServices();
+  final SellerServices sellerServices = SellerServices();
 
   List<File> images = [];
   String category = 'Mobiles';
@@ -60,9 +62,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
     });
   }
 
-  void sellProduct() {
+  void sellProduct(String sellerId) {
     if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
-      adminServices.sellProduct(
+      sellerServices.sellProduct(
         context: context,
         name: productNameController.text,
         description: descriptionController.text,
@@ -70,12 +72,14 @@ class _AddProductScreenState extends State<AddProductScreen> {
         quantity: int.parse(quantityController.text),
         category: category,
         images: images,
+        sellerId: sellerId,
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(50),
@@ -191,7 +195,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 const SizedBox(height: 10),
                 CustomButton(
                   text: 'Sell',
-                  function: sellProduct,
+                  function: () => sellProduct(userProvider.user.id),
                 ),
               ],
             ),

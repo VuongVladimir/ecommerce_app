@@ -35,7 +35,7 @@ dependencies:
   d_chart: ^2.8.0
   dotted_border: ^2.1.0
   file_picker: ^8.1.2
-  fl_chart: ^0.69.0
+  fl_chart: ^0.69.2
   flutter:
     sdk: flutter
   flutter_charts: ^0.5.2

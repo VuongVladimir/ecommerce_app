@@ -1,5 +1,5 @@
 import 'package:ecommerce_app_fluterr_nodejs/features/account/widgets/single_product.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/services/admin_services.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/services/seller_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/order_details/screens/order_details_screens.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/order.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +13,7 @@ class OrdersScreen extends StatefulWidget {
 
 class _OrdersScreenState extends State<OrdersScreen> {
   List<Order>? orderList;
-  final AdminServices _adminServices = AdminServices();
+  final SellerServices _sellerServices = SellerServices();
 
   @override
   void initState() {
@@ -23,7 +23,7 @@ class _OrdersScreenState extends State<OrdersScreen> {
   }
 
   void getAllOrders() async {
-    orderList = await _adminServices.fetchAllOrders(context);
+    orderList = await _sellerServices.fetchAllOrders(context);
     setState(() {});
   }
 

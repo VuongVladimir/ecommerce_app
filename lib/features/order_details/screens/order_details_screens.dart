@@ -1,6 +1,6 @@
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_button.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/services/admin_services.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/services/seller_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/search/screens/search_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/order.dart';
 import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
@@ -19,10 +19,11 @@ class OrderDetailsScreens extends StatefulWidget {
 
 class _OrderDetailsScreensState extends State<OrderDetailsScreens> {
   int currentStep = 0;
-  final AdminServices _adminServices = AdminServices();
+  final SellerServices _sellerServices = SellerServices();
   void navigateToSearchScreen(String query) {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -30,20 +31,21 @@ class _OrderDetailsScreensState extends State<OrderDetailsScreens> {
     currentStep = widget.order.status;
   }
 
-  // !!! ONLY FOR ADMIN
+  // !!! ONLY FOR SELLER
   void changeOrderStatus() {
-    _adminServices.changeOrderStatus(
-      context: context,
-      status: currentStep + 1,
-      order: widget.order,
-      onSuccess: () {
-        setState(() {
-          currentStep += 1;
-        });
-      },
-    );
+    if (currentStep < 3) {
+      _sellerServices.changeOrderStatus(
+        context: context,
+        status: currentStep + 1,
+        order: widget.order,
+        onSuccess: () {
+          setState(() {
+            currentStep += 1;
+          });
+        },
+      );
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -226,7 +228,7 @@ class _OrderDetailsScreensState extends State<OrderDetailsScreens> {
                 child: Stepper(
                   currentStep: currentStep,
                   controlsBuilder: (context, details) {
-                    if (user.type == 'admin') {
+                    if (user.type == 'seller' && currentStep < 3) {
                       return CustomButton(
                         text: 'Done',
                         function: () => changeOrderStatus(),

@@ -20,6 +20,8 @@ class CarouselImage extends StatelessWidget {
       options: CarouselOptions(
         viewportFraction: 1,
         height: 200,
+        enlargeCenterPage: false,
+        autoPlay: true,
       ),
     );
   }

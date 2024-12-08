@@ -1,4 +1,3 @@
-
 import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -9,10 +8,13 @@ class CartSubtotal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().user;
-    int sum = 0;
-    user.cart
-        .map((e) => sum += e['quantity'] * e['product']['price'] as int)
-        .toList();
+    double sum = 0;
+    for (var item in user.cart) {
+      double price = (item['product']['finalPrice'] ?? item['product']['price'])
+          .toDouble();
+      int quantity = item['quantity'] as int;
+      sum += price * quantity;
+    }
 
     return Container(
       margin: const EdgeInsets.all(10),
@@ -25,7 +27,7 @@ class CartSubtotal extends StatelessWidget {
             ),
           ),
           Text(
-            '\$$sum',
+            '\$${sum.toStringAsFixed(2)}',
             style: const TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.bold,

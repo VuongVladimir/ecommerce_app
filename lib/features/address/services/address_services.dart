@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:ecommerce_app_fluterr_nodejs/constants/error_handling.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/utils.dart';
+import 'package:ecommerce_app_fluterr_nodejs/models/product.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/user.dart';
 import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
 import 'package:flutter/material.dart';
@@ -75,5 +76,96 @@ class AddressServices {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+  }
+
+  void placeDirectOrder({
+    required BuildContext context,
+    required String address,
+    required double totalSum,
+    required List<Product> products,
+    required List<int> quantities,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    try {
+      http.Response res = await http.post(
+        Uri.parse('$uri/api/order-direct'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+        body: jsonEncode({
+          'products': products.map((e) => e.toMap()).toList(),
+          'quantities': quantities,
+          'totalPrice': totalSum,
+          'address': address,
+        }),
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          showSnackBar(context, "Your order has been placed!");
+          Navigator.pop(context);
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+  }
+
+  Future<String> getSellerAddress({
+    required BuildContext context,
+    required String sellerId,
+  }) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    String address = '';
+    
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$uri/seller/address/$sellerId'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          address = jsonDecode(res.body)['address'];
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return address;
+  }
+
+  Future<List<String>> getSellerAddresses(BuildContext context) async {
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
+    List<String> addresses = [];
+    
+    try {
+      http.Response res = await http.get(
+        Uri.parse('$uri/seller/addresses/cart'),
+        headers: {
+          'Content-Type': 'application/json; charset=UTF-8',
+          'x-auth-token': userProvider.user.token,
+        },
+      );
+
+      httpErrorHandle(
+        response: res,
+        context: context,
+        onSuccess: () {
+          addresses = List<String>.from(jsonDecode(res.body));
+        },
+      );
+    } catch (e) {
+      showSnackBar(context, e.toString());
+    }
+    return addresses;
   }
 }

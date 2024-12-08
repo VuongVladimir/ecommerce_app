@@ -21,21 +21,28 @@ class _CartScreenState extends State<CartScreen> {
     Navigator.pushNamed(context, SearchScreen.routeName, arguments: query);
   }
 
-  void navigateToAddressScreen(int sum) {
+  void navigateToAddressScreen(double sum) {
     Navigator.pushNamed(
       context,
       AddressScreen.routeName,
-      arguments: sum.toString(),
+      arguments: {
+        'totalAmount': sum.toStringAsFixed(2),
+      },
     );
   }
 
   @override
   Widget build(BuildContext context) {
     final user = context.watch<UserProvider>().user;
-    int sum = 0;
-    user.cart
-        .map((e) => sum += e['quantity'] * e['product']['price'] as int)
-        .toList();
+    double sum = 0;
+    for (var item in user.cart) {
+      double price = (item['product']['finalPrice'] ?? item['product']['price'])
+          .toDouble();
+      int quantity = item['quantity'] as int;
+
+      
+      sum += price * quantity;
+    }
     return Scaffold(
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(60),
@@ -111,42 +118,42 @@ class _CartScreenState extends State<CartScreen> {
           ),
         ),
       ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              const AddressBox(),
-              const SizedBox(height: 5),
-              SizedBox(
-                height: MediaQuery.of(context).size.height * 0.6,
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: user.cart.length,
-                  itemBuilder: (context, index) {
-                    return CartProduct(
-                      index: index,
-                    );
-                  },
-                ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const AddressBox(),
+            const SizedBox(height: 5),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.6,
+              child: ListView.builder(
+                shrinkWrap: true,
+                itemCount: user.cart.length,
+                itemBuilder: (context, index) {
+                  return CartProduct(
+                    index: index,
+                  );
+                },
               ),
-              const SizedBox(height: 10),
-              Container(
-                color: Colors.black12.withOpacity(0.08),
-                height: 1,
+            ),
+            const SizedBox(height: 10),
+            Container(
+              color: Colors.black12.withOpacity(0.08),
+              height: 1,
+            ),
+            Container(height: 5),
+            const CartSubtotal(),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: CustomButton(
+                text: "Proceed to Buy (${user.cart.length} items)",
+                function: () => navigateToAddressScreen(sum),
+                color: Colors.yellow[600],
+                textColor: Colors.black,
               ),
-              Container(height: 5),
-              const CartSubtotal(),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CustomButton(
-                  text: "Proceed to Buy (${user.cart.length} items)",
-                  function: () => navigateToAddressScreen(sum),
-                  color: Colors.yellow[600],
-                  textColor: Colors.black,
-                ),
-              ),
-            ],
-          ),
+            ),
+          ],
         ),
+      ),
     );
   }
 }

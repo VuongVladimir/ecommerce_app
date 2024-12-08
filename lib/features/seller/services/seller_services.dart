@@ -20,6 +20,7 @@ class SellerServices {
     required BuildContext context,
     required String shopName,
     required String shopDescription,
+    required String address,
     required File avatar,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -40,6 +41,7 @@ class SellerServices {
         body: jsonEncode({
           'shopName': shopName,
           'shopDescription': shopDescription,
+          'address': address,
           'avatarUrl': avatarRes.secureUrl,
         }),
       );
@@ -465,6 +467,42 @@ Future<void> unfollowSeller({
       onSuccess: () {
         userProvider.unfollowSeller(sellerId);
         showSnackBar(context, 'Successfully unfollowed seller');
+      },
+    );
+  } catch (e) {
+    showSnackBar(context, e.toString());
+  }
+}
+
+void setProductDiscount({
+  required BuildContext context,
+  required Product product,
+  required double percentage,
+  required DateTime startDate,
+  required DateTime endDate,
+}) async {
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
+  try {
+    http.Response res = await http.post(
+      Uri.parse('$uri/seller/set-discount'),
+      headers: {
+        'Content-Type': 'application/json; charset=UTF-8',
+        'x-auth-token': userProvider.user.token,
+      },
+      body: jsonEncode({
+        'id': product.id,
+        'percentage': percentage,
+        'startDate': startDate.toIso8601String(),
+        'endDate': endDate.toIso8601String(),
+      }),
+    );
+
+    httpErrorHandle(
+      response: res,
+      context: context,
+      onSuccess: () {
+        showSnackBar(context, 'Discount set successfully!');
+        Navigator.pop(context);
       },
     );
   } catch (e) {

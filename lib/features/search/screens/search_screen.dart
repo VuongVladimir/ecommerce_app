@@ -4,7 +4,9 @@ import 'package:ecommerce_app_fluterr_nodejs/features/product_details/screens/pr
 import 'package:ecommerce_app_fluterr_nodejs/features/search/services/search_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/search/widget/searched_product.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/product.dart';
+import 'package:ecommerce_app_fluterr_nodejs/providers/product_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SearchScreen extends StatefulWidget {
   static const String routeName = '/search-screen';
@@ -22,7 +24,10 @@ class _SearchScreenState extends State<SearchScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getSearchServices();
+    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    getSearchServices().then((products) {
+    productProvider.setProducts(products);
+  });
   }
 
   getSearchServices() async {

@@ -20,6 +20,7 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
   final TextEditingController _shopNameController = TextEditingController();
   final TextEditingController _shopDescriptionController =
       TextEditingController();
+  final TextEditingController _addressController = TextEditingController();
   final SellerServices sellerServices = SellerServices();
   String? requestStatus;
   File? avatarImage;
@@ -38,6 +39,7 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
     super.dispose();
     _shopNameController.dispose();
     _shopDescriptionController.dispose();
+    _addressController.dispose();
   }
 
   void selectImage() async {
@@ -60,6 +62,7 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
         context: context,
         shopName: _shopNameController.text,
         shopDescription: _shopDescriptionController.text,
+        address: _addressController.text,
         avatar: avatarImage!,
       );
       setState(() {
@@ -101,7 +104,6 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           margin: const EdgeInsets.only(bottom: 30),
                           width: double.infinity,
-                          
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 161, 219, 246),
                             borderRadius: BorderRadius.circular(8),
@@ -171,6 +173,11 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
                       ),
                       const SizedBox(height: 10),
                       CustomTextField(
+                        textController: _addressController,
+                        hintText: 'Shop Address (City/Town)',
+                      ),
+                      const SizedBox(height: 10),
+                      CustomTextField(
                         textController: _shopDescriptionController,
                         hintText: 'Shop Description',
                         maxLines: 5,
@@ -178,7 +185,8 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
                       const SizedBox(height: 20),
                       CustomButton(
                         text: 'Send Request',
-                        function: requestStatus != 'pending' ? registerSeller : null,
+                        function:
+                            requestStatus != 'pending' ? registerSeller : null,
                       ),
                     ],
                   ),

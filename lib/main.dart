@@ -4,6 +4,7 @@ import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/admin_screen
 import 'package:ecommerce_app_fluterr_nodejs/features/auth/screens/auth_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/auth/services/auth_service.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/seller_screen.dart';
+import 'package:ecommerce_app_fluterr_nodejs/providers/product_provider.dart';
 import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
 import 'package:ecommerce_app_fluterr_nodejs/router.dart';
 import 'package:flutter/material.dart';
@@ -16,6 +17,7 @@ void main() {
         ChangeNotifierProvider(
           create: (context) => UserProvider(),
         ),
+        ChangeNotifierProvider(create: (context) => ProductProvider()),
       ],
       child: const MyApp(),
     ),

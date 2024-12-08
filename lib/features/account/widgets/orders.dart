@@ -54,28 +54,36 @@ class _OrdersState extends State<Orders> {
                   ),
                 ],
               ),
-              Container(
-                height: 170,
-                padding: const EdgeInsets.only(left: 10, top: 20, right: 0),
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: orderList!.length,
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.pushNamed(
-                          context,
-                          OrderDetailsScreens.routeName,
-                          arguments: orderList![index],
-                        );
-                      },
-                      child: SingleProduct(
-                        image: orderList![index].products[0].images[0],
-                      ),
-                    );
-                  },
+              // Thay thế Container cũ bằng Expanded và GridView
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(15),
+                  child: GridView.builder(
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2, // Số cột
+                      childAspectRatio: 1, // Tỷ lệ khung hình
+                      crossAxisSpacing: 10, // Khoảng cách giữa các cột
+                      mainAxisSpacing: 10, // Khoảng cách giữa các hàng
+                    ),
+                    itemCount: orderList!.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            OrderDetailsScreens.routeName,
+                            arguments: orderList![index],
+                          );
+                        },
+                        child: SingleProduct(
+                          image: orderList![index].products[0].images[0],
+                        ),
+                      );
+                    },
+                  ),
                 ),
-              )
+              ),
             ],
           );
   }

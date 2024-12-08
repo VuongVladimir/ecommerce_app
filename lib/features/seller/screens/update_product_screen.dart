@@ -6,6 +6,7 @@ import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_button.dart';
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_textfield.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/utils.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/set_discount_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/services/seller_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/product.dart';
 import 'package:flutter/material.dart';
@@ -83,15 +84,24 @@ class _AddProductScreenState extends State<UpdateProductScreen> {
         descriptionController.text.isNotEmpty ||
         priceController.text.isNotEmpty ||
         quantityController.text.isNotEmpty ||
-        newImages.isNotEmpty || category != widget.product.category) {
+        newImages.isNotEmpty ||
+        category != widget.product.category) {
       sellerServices.updateProduct(
         context: context,
         product: widget.product,
         images: images,
-        name: (productNameController.text.isNotEmpty) ? productNameController.text : widget.product.name,
-        description: (descriptionController.text.isNotEmpty) ? descriptionController.text : widget.product.description,
-        price: (priceController.text.isNotEmpty) ? double.parse(priceController.text) : widget.product.price,
-        quantity: (quantityController.text.isNotEmpty) ? int.parse(quantityController.text) : widget.product.quantity,
+        name: (productNameController.text.isNotEmpty)
+            ? productNameController.text
+            : widget.product.name,
+        description: (descriptionController.text.isNotEmpty)
+            ? descriptionController.text
+            : widget.product.description,
+        price: (priceController.text.isNotEmpty)
+            ? double.parse(priceController.text)
+            : widget.product.price,
+        quantity: (quantityController.text.isNotEmpty)
+            ? int.parse(quantityController.text)
+            : widget.product.quantity,
         category: category,
         newImages: newImages,
       );
@@ -216,6 +226,18 @@ class _AddProductScreenState extends State<UpdateProductScreen> {
                 CustomButton(
                   text: 'Update',
                   function: updateProduct,
+                ),
+                const SizedBox(height: 10),
+                CustomButton(
+                  text: 'Set Discount',
+                  color: Colors.amber,
+                  function: () {
+                    Navigator.pushNamed(
+                      context,
+                      SetDiscountScreen.routeName,
+                      arguments: widget.product,
+                    );
+                  },
                 ),
               ],
             ),

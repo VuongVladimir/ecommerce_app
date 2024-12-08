@@ -1,7 +1,10 @@
+const path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+
 // IMPORT FROM PACKAGES
 const express = require("express");
 const mongoose = require("mongoose");
-require('dotenv').config();
+
 // IMPORT FROM OTHER FILES
 const authRouter = require("./routes/auth");
 const adminRouter = require("./routes/admin");
@@ -13,6 +16,7 @@ const sellerRouter = require("./routes/seller");
 const PORT = process.env.PORT || 3000;
 const app = express();
 const DB = process.env.MONGODB_URL;
+//console.log('MongoDB URL:', DB);
 // middleware
 app.use(express.json());
 app.use(authRouter);

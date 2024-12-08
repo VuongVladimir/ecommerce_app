@@ -3,6 +3,7 @@ import 'package:ecommerce_app_fluterr_nodejs/features/account/screens/seller_reg
 import 'package:ecommerce_app_fluterr_nodejs/features/address/screens/address_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/add_product_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/admin_screen.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/set_discount_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/shop_profile_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/update_product_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/auth/screens/auth_screen.dart';
@@ -86,11 +87,13 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         ),
       );
     case AddressScreen.routeName:
-      var totalAmount = routeSettings.arguments as String;
+      var args = routeSettings.arguments as Map<String, dynamic>;
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => AddressScreen(
-          totalAmount: totalAmount,
+          totalAmount: args['totalAmount'] as String,
+          products: args['products'] as List<Product>?,
+          quantities: args['quantities'] as List<int>?,
         ),
       );
     case OrderDetailsScreens.routeName:
@@ -106,6 +109,14 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
       return MaterialPageRoute(
         settings: routeSettings,
         builder: (_) => UpdateProductScreen(
+          product: product,
+        ),
+      );
+    case SetDiscountScreen.routeName:
+      var product = routeSettings.arguments as Product;
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => SetDiscountScreen(
           product: product,
         ),
       );

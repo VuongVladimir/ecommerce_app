@@ -61,14 +61,46 @@ productRouter.post("/api/rate-product", auth, async (req, res) => {
 });
 
 // Deal of the day
+// productRouter.get("/api/deal-of-day", auth, async (req, res) => {
+//     try {
+//         let products = await Product.find({ avgRating: { $gte: 4 } }).sort({ avgRating: -1 }).populate('sellerId', 'shopName shopAvatar');
+
+//         res.json(products);
+//     } catch (e) {
+//         res.status(500).json({ error: e.message });
+//     }
+// });
+
 productRouter.get("/api/deal-of-day", auth, async (req, res) => {
     try {
-        let products = await Product.find({ avgRating: { $gte: 4 } }).sort({ avgRating: -1 }).populate('sellerId', 'shopName shopAvatar');
+      const now = new Date();
+      
+      // Tìm các sản phẩm đang trong thời gian giảm giá
+      let products = await Product.find({
+        'discount.percentage': { $gt: 0 },
+        'discount.startDate': { $lte: now },
+        'discount.endDate': { $gte: now }
+      })
+      .populate('sellerId', 'shopName shopAvatar')
+      .sort({ 'discount.percentage': -1 }) // Sắp xếp theo phần trăm giảm giá
+      .limit(10); // Lấy 10 sản phẩm giảm giá cao nhất
+  
+      if (products.length < 10) {
+        const remainingCount = 10 - products.length;
+      const highRatedProducts = await Product.find({
+        _id: { $nin: products.map(p => p._id) }, // Exclude already selected products
+      })
+      .populate('sellerId', 'shopName shopAvatar')
+      .sort({ avgRating: -1 })
+      .limit(remainingCount);
 
-        res.json(products);
+      products = [...products, ...highRatedProducts];
+      }
+  
+      res.json(products);
     } catch (e) {
-        res.status(500).json({ error: e.message });
+      res.status(500).json({ error: e.message });
     }
-});
+  });
 
 module.exports = productRouter;

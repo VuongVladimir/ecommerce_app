@@ -4,7 +4,9 @@ import 'package:ecommerce_app_fluterr_nodejs/features/account/widgets/single_pro
 import 'package:ecommerce_app_fluterr_nodejs/features/home/services/home_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/product_details/screens/product_details_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/product.dart';
+import 'package:ecommerce_app_fluterr_nodejs/providers/product_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class CategoryDealsScreen extends StatefulWidget {
   static const String routeName = '/category-deals';
@@ -22,7 +24,10 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getCategoryProducts();
+    final productProvider = Provider.of<ProductProvider>(context, listen: false);
+    getCategoryProducts().then((products) {
+    productProvider.setProducts(products);
+  });
   }
 
   getCategoryProducts() async {

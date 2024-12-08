@@ -220,6 +220,7 @@ adminRouter.post('/admin/process-seller-request', admin, async (req, res) => {
                 type: 'seller',
                 shopName: request.shopName,
                 shopDescription: request.shopDescription,
+                address: request.address,
                 shopAvatar: request.avatarUrl,
             });
         }

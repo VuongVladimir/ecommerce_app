@@ -2,6 +2,36 @@ import 'dart:convert';
 
 import 'package:ecommerce_app_fluterr_nodejs/models/rating.dart';
 
+
+class Discount {
+  final double percentage;
+  final DateTime? startDate;
+  final DateTime? endDate;
+
+  Discount({
+    required this.percentage,
+    this.startDate,
+    this.endDate,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'percentage': percentage,
+      'startDate': startDate?.toIso8601String(),
+      'endDate': endDate?.toIso8601String(),
+    };
+  }
+
+  factory Discount.fromMap(Map<String, dynamic> map) {
+    return Discount(
+      percentage: map['percentage']?.toDouble() ?? 0.0,
+      startDate: map['startDate'] != null ? DateTime.parse(map['startDate']) : null,
+      endDate: map['endDate'] != null ? DateTime.parse(map['endDate']) : null,
+    );
+  }
+}
+
+
 class Product {
   final String name;
   final String description;
@@ -15,6 +45,8 @@ class Product {
   final double? avgRating;
   final String? shopName;
   final String? shopAvatar;
+  final Discount? discount;
+  final double finalPrice;
   Product({
     required this.name,
     required this.description,
@@ -28,7 +60,9 @@ class Product {
     this.avgRating,
     this.shopName,
     this.shopAvatar,
-  });
+    this.discount,
+    double? finalPrice,
+  }) : finalPrice = finalPrice ?? price ;
   // Chuyển đổi từ đối tượng thành Map
   Map<String, dynamic> toMap() {
     return {
@@ -44,6 +78,8 @@ class Product {
       'avgRating': avgRating,
       'shopName': shopName,
       'shopAvatar': shopAvatar,
+       'discount': discount?.toMap(),
+      'finalPrice': finalPrice,
     };
   }
 
@@ -68,6 +104,8 @@ class Product {
       avgRating: map['avgRating']?.toDouble() ?? 0.0,
       shopName: map['sellerId'] is Map ? map['sellerId']['shopName']?.toString() : map['shopName'],
       shopAvatar: map['sellerId'] is Map ? map['sellerId']['shopAvatar']?.toString() : map['shopAvatar'],
+      discount: map['discount'] != null ? Discount.fromMap(map['discount']) : null,
+      finalPrice: map['finalPrice']?.toDouble() ?? map['price']?.toDouble() ?? 0.0,
     );
   }
 

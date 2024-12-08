@@ -51,7 +51,7 @@ class _AdminScreenState extends State<AdminScreen> {
                 ),
               ),
               PopupMenuButton(
-                icon: const Icon(Icons.arrow_drop_down),
+                icon: const Icon(Icons.menu_rounded),
                 onSelected: (value) {
                   if (value == 'logout') {
                     AccountServices().logOut(context);

@@ -10,6 +10,7 @@ class SellerRequest {
   final DateTime createdAt;
   final String userName;    // Thêm field mới
   final String userEmail;
+  final String address;
 
   SellerRequest({
     required this.id,
@@ -21,6 +22,7 @@ class SellerRequest {
     required this.createdAt,
     required this.userName,
     required this.userEmail,
+    required this.address,
   });
 
   Map<String, dynamic> toMap() {
@@ -34,6 +36,7 @@ class SellerRequest {
       'createdAt': createdAt.toIso8601String(),
       'userName': userName,
       'userEmail': userEmail,
+      'address': address,
     };
   }
 
@@ -59,6 +62,7 @@ class SellerRequest {
       avatarUrl: map['avatarUrl']?.toString() ?? '',
       status: map['status']?.toString() ?? '',
       createdAt: DateTime.parse(map['createdAt']),
+      address: map['address']?.toString() ?? '',
     );
   }
 

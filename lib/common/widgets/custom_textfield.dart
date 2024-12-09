@@ -5,6 +5,7 @@ class CustomTextField extends StatefulWidget {
   final String hintText;
   final int maxLines;
   final bool isPass;
+  final TextInputType keyboardType;
 
   const CustomTextField({
     super.key,
@@ -12,6 +13,7 @@ class CustomTextField extends StatefulWidget {
     required this.hintText,
     this.maxLines = 1,
     this.isPass = false,
+    required this.keyboardType,
   });
 
   @override
@@ -25,6 +27,8 @@ class _CustomTextFieldState extends State<CustomTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.textController,
+      keyboardType: widget.keyboardType,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         hintText: widget.hintText,
         border: const OutlineInputBorder(
@@ -62,6 +66,21 @@ class _CustomTextFieldState extends State<CustomTextField> {
       validator: (val) {
         if (val == null || val.isEmpty) {
           return "Enter your ${widget.hintText}";
+        }
+        switch (widget.keyboardType) {
+          case TextInputType.emailAddress:
+            final emailRegExp = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
+            if (!emailRegExp.hasMatch(val)) {
+              return 'Please enter a valid email';
+            }
+            break;
+          case TextInputType.number:
+            if (double.tryParse(val) == null) {
+              return 'Please enter a valid number';
+            }
+            break;
+          default:
+            break;
         }
         return null;
       },

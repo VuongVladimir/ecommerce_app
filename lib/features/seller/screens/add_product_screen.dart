@@ -63,6 +63,9 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void sellProduct(String sellerId) {
+    if(images.isEmpty) {
+      showSnackBar(context, "Please select image!");
+    }
     if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
       sellerServices.sellProduct(
         context: context,
@@ -156,22 +159,26 @@ class _AddProductScreenState extends State<AddProductScreen> {
                 CustomTextField(
                   textController: productNameController,
                   hintText: "Product Name",
+                  keyboardType: TextInputType.text,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   textController: descriptionController,
                   hintText: "Description",
                   maxLines: 5,
+                  keyboardType: TextInputType.text,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   textController: priceController,
                   hintText: "Price",
+                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   textController: quantityController,
                   hintText: "Quantity",
+                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
                 SizedBox(

@@ -241,21 +241,25 @@ class _AddressScreenState extends State<AddressScreen> {
                     CustomTextField(
                       textController: flatBuildingController,
                       hintText: 'Flat, House no, Building',
+                      keyboardType: TextInputType.text,
                     ),
                     const SizedBox(height: 10),
                     CustomTextField(
                       textController: areaController,
                       hintText: 'Area, Street',
+                      keyboardType: TextInputType.text,
                     ),
                     const SizedBox(height: 10),
                     CustomTextField(
                       textController: pincodeController,
                       hintText: 'District',
+                      keyboardType: TextInputType.text,
                     ),
                     const SizedBox(height: 10),
                     CustomTextField(
                       textController: cityController,
                       hintText: 'Town/City',
+                      keyboardType: TextInputType.text,
                     ),
                     const SizedBox(height: 10),
                   ],

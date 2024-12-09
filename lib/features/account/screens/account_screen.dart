@@ -1,6 +1,5 @@
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/account/services/account_services.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/account/widgets/below_appBar.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/account/widgets/notifications_bottom_sheet.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/account/widgets/orders.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/account/widgets/top_button.dart';
@@ -8,7 +7,9 @@ import 'package:ecommerce_app_fluterr_nodejs/features/product_details/screens/pr
 import 'package:ecommerce_app_fluterr_nodejs/features/product_details/services/product_details_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/notification.dart';
 import 'package:badges/badges.dart' as badges;
+import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class AccountScreen extends StatefulWidget {
   const AccountScreen({super.key});
@@ -109,44 +110,79 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<UserProvider>(context).user;
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(50),
+        preferredSize: const Size.fromHeight(70), // Tăng chiều cao một chút
         child: AppBar(
+          elevation: 0, // Bỏ shadow
           flexibleSpace: Container(
             decoration: const BoxDecoration(
               gradient: GlobalVariables.appBarGradient,
             ),
           ),
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          title: Column(
+            //mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                alignment: Alignment.topLeft,
-                child: Image.asset(
-                  'assets/images/amazon_in.png',
-                  width: 120,
-                  height: 45,
-                  color: Colors.black,
+              const Text(
+                'My Account',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black87,
                 ),
               ),
-              Container(
-                padding: const EdgeInsets.only(left: 15, right: 15),
-                child: InkWell(
-                  onTap: () => _showNotifications(context),
-                  child: badges.Badge(
-                    badgeContent: Text(unreadCount.toString()),
-                    child: const Icon(Icons.notifications_outlined),
-                  ),
-                ),
-              )
+              const SizedBox(height: 7),
+              RichText(
+                text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                    ),
+                    children: [
+                      const TextSpan(
+                        text: 'Hello, ',
+                      ),
+                      TextSpan(
+                        text: user.name,
+                        style: const TextStyle(fontWeight: FontWeight.w700),
+                      ),
+                    ]),
+              ),
             ],
           ),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: InkWell(
+                onTap: () => _showNotifications(context),
+                child: badges.Badge(
+                  badgeStyle: const badges.BadgeStyle(
+                    badgeColor: Colors.redAccent,
+                    padding: EdgeInsets.all(6),
+                  ),
+                  badgeContent: Text(
+                    unreadCount.toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 13,
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.notifications_outlined,
+                    size: 28,
+                    color: Colors.black87,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
       body: const Column(
         children: [
-          BelowAppBar(),
+          //BelowAppBar(),
           SizedBox(height: 15),
           TopButton(),
           SizedBox(height: 20),

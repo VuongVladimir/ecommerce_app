@@ -65,6 +65,7 @@ class _AuthScreenState extends State<AuthScreen> {
             CustomTextField(
               textController: _emailController,
               hintText: 'Enter your email',
+              keyboardType: TextInputType.emailAddress,
             ),
           ],
         ),
@@ -96,6 +97,7 @@ class _AuthScreenState extends State<AuthScreen> {
                             textController: newPasswordController,
                             hintText: 'Enter new password',
                             isPass: true,
+                            keyboardType: TextInputType.text,
                           ),
                         ],
                       ),
@@ -139,14 +141,14 @@ class _AuthScreenState extends State<AuthScreen> {
               const EdgeInsets.symmetric(horizontal: 25), // Increased padding
           child: Column(
             children: [
-              const SizedBox(height: 100), // Increased top spacing
+              const SizedBox(height: 50), // Increased top spacing
               // Logo Amazon
               Image.asset(
-                'assets/images/amazon_in.png',
-                height: 80,
-                color: Colors.black,
+                'assets/images/logo_3.png',
+                height: 250,
+                //color: Colors.white,
               ),
-              const SizedBox(height: 35), // Increased spacing
+              const SizedBox(height: 10), // Increased spacing
 
               // Login/Signup Toggle
               Container(
@@ -225,23 +227,27 @@ class _AuthScreenState extends State<AuthScreen> {
                       CustomTextField(
                         textController: _nameController,
                         hintText: 'Username',
+                        keyboardType: TextInputType.text,
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
                         textController: _emailController,
                         hintText: 'Email',
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
                         textController: _passwordController,
                         hintText: 'Password',
                         isPass: true,
+                        keyboardType: TextInputType.text,
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
                         textController: TextEditingController(),
                         hintText: 'Re-enter Password',
                         isPass: true,
+                        keyboardType: TextInputType.text,
                       ),
                       const SizedBox(height: 25),
                       CustomButton(
@@ -264,11 +270,13 @@ class _AuthScreenState extends State<AuthScreen> {
                       CustomTextField(
                         textController: _emailController,
                         hintText: 'Email',
+                        keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 15),
                       CustomTextField(
                         textController: _passwordController,
                         hintText: 'Password',
+                        keyboardType: TextInputType.text,
                         isPass: true,
                       ),
                       

@@ -57,6 +57,9 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
   }
 
   void registerSeller() async {
+    if(avatarImage == null) {
+      showSnackBar(context, "Please pick image!");
+    }
     if (_registrationFormKey.currentState!.validate() && avatarImage != null) {
       String status = await sellerServices.registerSeller(
         context: context,
@@ -170,17 +173,20 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
                       CustomTextField(
                         textController: _shopNameController,
                         hintText: 'Shop Name',
+                        keyboardType: TextInputType.text,
                       ),
                       const SizedBox(height: 10),
                       CustomTextField(
                         textController: _addressController,
                         hintText: 'Shop Address (City/Town)',
+                        keyboardType: TextInputType.text,
                       ),
                       const SizedBox(height: 10),
                       CustomTextField(
                         textController: _shopDescriptionController,
                         hintText: 'Shop Description',
                         maxLines: 5,
+                        keyboardType: TextInputType.text,
                       ),
                       const SizedBox(height: 20),
                       CustomButton(

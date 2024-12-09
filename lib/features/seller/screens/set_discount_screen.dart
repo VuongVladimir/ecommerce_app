@@ -64,7 +64,7 @@ class _SetDiscountScreenState extends State<SetDiscountScreen> {
               CustomTextField(
                 textController: percentageController,
                 hintText: 'Discount Percentage',
-                //keyboardType: TextInputType.number,
+                keyboardType: TextInputType.number,
               ),
               const SizedBox(height: 10),
               ListTile(

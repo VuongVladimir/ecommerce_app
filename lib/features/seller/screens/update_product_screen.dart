@@ -186,22 +186,26 @@ class _AddProductScreenState extends State<UpdateProductScreen> {
                 CustomTextField(
                   textController: productNameController,
                   hintText: widget.product.name,
+                  keyboardType: TextInputType.text,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   textController: descriptionController,
                   hintText: widget.product.description,
                   maxLines: 5,
+                  keyboardType: TextInputType.text,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   textController: priceController,
                   hintText: widget.product.price.toString(),
+                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
                 CustomTextField(
                   textController: quantityController,
                   hintText: widget.product.quantity.toString(),
+                  keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: 10),
                 SizedBox(

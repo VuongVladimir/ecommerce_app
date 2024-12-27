@@ -33,8 +33,8 @@ class _SetDiscountScreenState extends State<SetDiscountScreen> {
         context: context,
         product: widget.product,
         percentage: double.parse(percentageController.text),
-        startDate: startDate!,
-        endDate: endDate!,
+        startDate: startDate!.toUtc(),
+        endDate: endDate!.toUtc(),
       );
     }
   }

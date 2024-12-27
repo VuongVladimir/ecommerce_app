@@ -1,6 +1,7 @@
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/bottom_bar.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/account/screens/seller_registration_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/address/screens/address_screen.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/address/screens/set_address.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/add_product_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/admin_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/set_discount_screen.dart';
@@ -92,6 +93,7 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         settings: routeSettings,
         builder: (_) => AddressScreen(
           totalAmount: args['totalAmount'] as String,
+          selectedItems: args['selectedItems'] as List<int>?,
           products: args['products'] as List<Product>?,
           quantities: args['quantities'] as List<int>?,
         ),
@@ -119,6 +121,11 @@ Route<dynamic> generateRoute(RouteSettings routeSettings) {
         builder: (_) => SetDiscountScreen(
           product: product,
         ),
+      );
+      case SetAddressScreen.routeName:
+      return MaterialPageRoute(
+        settings: routeSettings,
+        builder: (_) => const SetAddressScreen(),
       );
     default:
       return MaterialPageRoute(

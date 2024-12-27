@@ -10,6 +10,7 @@ import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/set_discoun
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/services/seller_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 
 class UpdateProductScreen extends StatefulWidget {
   static const String routeName = '/update-product';
@@ -27,7 +28,7 @@ class _AddProductScreenState extends State<UpdateProductScreen> {
   final TextEditingController quantityController = TextEditingController();
   final SellerServices sellerServices = SellerServices();
 
-  List<File> newImages = [];
+  List<dynamic> newImages = [];
   List<String> images = [];
   String category = 'Mobiles';
   List<String> productCategories = [
@@ -65,20 +66,6 @@ class _AddProductScreenState extends State<UpdateProductScreen> {
     });
   }
 
-  // void sellProduct() {
-  //   if (_addProductFormKey.currentState!.validate() || images.isNotEmpty) {
-  //     adminServices.sellProduct(
-  //       context: context,
-  //       name: productNameController.text,
-  //       description: descriptionController.text,
-  //       price: double.parse(priceController.text),
-  //       quantity: int.parse(quantityController.text),
-  //       category: category,
-  //       images: images,
-  //     );
-  //   }
-  // }
-
   void updateProduct() {
     if (productNameController.text.isNotEmpty ||
         descriptionController.text.isNotEmpty ||
@@ -108,6 +95,41 @@ class _AddProductScreenState extends State<UpdateProductScreen> {
     }
   }
 
+  Widget buildNewImagesPreview() {
+    if (newImages.isEmpty) return const SizedBox();
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        const Text(
+          'New Images Selected:',
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        const SizedBox(height: 10),
+        CarouselSlider(
+          items: newImages.map((i) {
+            return Builder(
+              builder: (BuildContext context) => kIsWeb
+                  ? Image.memory(
+                      i,
+                      fit: BoxFit.cover,
+                      height: 200,
+                    )
+                  : Image.file(
+                      i,
+                      fit: BoxFit.cover,
+                      height: 200,
+                    ),
+            );
+          }).toList(),
+          options: CarouselOptions(
+            viewportFraction: 1,
+            height: 200,
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -134,54 +156,72 @@ class _AddProductScreenState extends State<UpdateProductScreen> {
               children: [
                 const SizedBox(height: 3),
                 images.isNotEmpty
-                    ? CarouselSlider(
-                        items: images.map((i) {
-                          return Builder(
-                            builder: (BuildContext context) => Image.network(
-                              i,
-                              fit: BoxFit.cover,
-                              height: 200,
-                            ),
-                          );
-                        }).toList(),
-                        options: CarouselOptions(
-                          viewportFraction: 1,
-                          height: 200,
-                        ),
-                      )
-                    : GestureDetector(
-                        onTap: selectImages,
-                        child: DottedBorder(
-                          borderType: BorderType.RRect,
-                          radius: const Radius.circular(20),
-                          dashPattern: [10, 4],
-                          strokeCap: StrokeCap.round,
-                          child: Container(
-                            width: double.infinity,
-                            height: 140,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  Icons.folder_open,
-                                  size: 40,
-                                ),
-                                const SizedBox(height: 15),
-                                Text(
-                                  "Select Product Images",
-                                  style: TextStyle(
-                                    fontSize: 15,
-                                    color: Colors.grey.shade400,
-                                  ),
-                                ),
-                              ],
+                    ? Column(
+                        children: [
+                          const Text(
+                            'Current Images:',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                        ),
+                          const SizedBox(height: 10),
+                          CarouselSlider(
+                            items: images.map((i) {
+                              return Builder(
+                                builder: (BuildContext context) =>
+                                    Image.network(
+                                  i,
+                                  fit: BoxFit.cover,
+                                  height: 200,
+                                ),
+                              );
+                            }).toList(),
+                            options: CarouselOptions(
+                              viewportFraction: 1,
+                              height: 200,
+                            ),
+                          ),
+                        ],
+                      )
+                    : const SizedBox(),
+
+                // Hiển thị ảnh mới được chọn
+                buildNewImagesPreview(),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: selectImages,
+                  child: DottedBorder(
+                    borderType: BorderType.RRect,
+                    radius: const Radius.circular(20),
+                    dashPattern: const [10, 4],
+                    strokeCap: StrokeCap.round,
+                    child: Container(
+                      width: double.infinity,
+                      height: 100, // Giảm chiều cao xuống
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
                       ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(
+                            Icons.folder_open,
+                            size: 40,
+                          ),
+                          const SizedBox(height: 5),
+                          Text(
+                            "Select New Images",
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.grey.shade400,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 const SizedBox(height: 30),
                 CustomTextField(
                   textController: productNameController,

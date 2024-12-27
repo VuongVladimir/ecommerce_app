@@ -101,11 +101,9 @@ class _AccountScreenState extends State<AccountScreen> {
     fetchNotifications();
   }
 
-  Future<void> _handleClearOld() async {
-    // You can add a dialog to let user choose number of days
-    const days = 30;
-    await accountServices.clearOldNotifications(context, days);
-    fetchNotifications();
+  Future<void> _handleClearOld(int days) async {
+  await accountServices.clearOldNotifications(context, days);
+  fetchNotifications();
   }
 
   @override
@@ -181,11 +179,18 @@ class _AccountScreenState extends State<AccountScreen> {
         ),
       ),
       body: const Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          //BelowAppBar(),
           SizedBox(height: 15),
           TopButton(),
           SizedBox(height: 20),
+          Padding(
+            padding: EdgeInsets.all(8.0),
+            child: Text('Your Orders',
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.w800)),
+          ),
+          Divider(),
+
           Expanded(child: Orders()),
         ],
       ),

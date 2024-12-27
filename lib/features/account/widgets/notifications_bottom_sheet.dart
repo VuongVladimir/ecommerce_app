@@ -1,3 +1,4 @@
+import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_textfield.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/notification.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,7 @@ class NotificationsBottomSheet extends StatelessWidget {
   final Function(Notification_Model) onNotificationTap;
   final VoidCallback onMarkAllRead;
   final VoidCallback onDeleteAll;
-  final VoidCallback onClearOld;
+  final Function(int) onClearOld;
   final Function(String) onDeleteNotification;
 
   const NotificationsBottomSheet({
@@ -46,6 +47,7 @@ class NotificationsBottomSheet extends StatelessWidget {
                     switch (value) {
                       case 'mark_all':
                         onMarkAllRead();
+                        Navigator.pop(context);
                         break;
                       case 'delete_all':
                         showDialog(
@@ -63,6 +65,7 @@ class NotificationsBottomSheet extends StatelessWidget {
                                 onPressed: () {
                                   Navigator.pop(context);
                                   onDeleteAll();
+                                  Navigator.pop(context);
                                 },
                                 child: const Text(
                                   'Delete',
@@ -74,7 +77,7 @@ class NotificationsBottomSheet extends StatelessWidget {
                         );
                         break;
                       case 'clear_old':
-                        onClearOld();
+                        _showDaysInputDialog(context);
                         break;
                     }
                   },
@@ -221,5 +224,51 @@ class NotificationsBottomSheet extends StatelessWidget {
       return 'Yesterday';
     }
     return '${difference.inDays} days ago';
+  }
+
+  void _showDaysInputDialog(BuildContext context) {
+    final TextEditingController daysController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Clear Old Notifications'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Enter number of days to keep notifications:'),
+            // TextField(
+            //   controller: daysController,
+            //   keyboardType: TextInputType.number,
+            //   decoration: const InputDecoration(
+            //     hintText: 'e.g., 30',
+            //   ),
+            // ),
+            const SizedBox(height: 7),
+            CustomTextField(
+              textController: daysController,
+              hintText: 'e.g., 30',
+              keyboardType: TextInputType.number,
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (daysController.text.isNotEmpty) {
+                Navigator.pop(context); // Đóng dialog
+                onClearOld(int.parse(daysController.text));
+                Navigator.pop(context); // Đóng bottom sheet
+              }
+            },
+            child: const Text('Clear'),
+          ),
+        ],
+      ),
+    );
   }
 }

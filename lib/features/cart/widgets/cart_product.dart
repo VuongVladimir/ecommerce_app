@@ -7,7 +7,14 @@ import 'package:provider/provider.dart';
 
 class CartProduct extends StatefulWidget {
   final int index;
-  const CartProduct({super.key, required this.index});
+  final bool isSelected;
+  final Function(bool?)? onSelected;
+  const CartProduct({
+    super.key,
+    required this.index,
+    this.isSelected = false,
+    this.onSelected,
+  });
 
   @override
   State<CartProduct> createState() => _CartProductState();
@@ -56,6 +63,13 @@ class _CartProductState extends State<CartProduct> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Checkbox(
+                  value: widget.isSelected,
+                  onChanged: widget.onSelected,
+                ),
+              ),
               // Image section
               ClipRRect(
                 borderRadius: const BorderRadius.only(

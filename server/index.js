@@ -2,6 +2,7 @@ const path = require('path');
 require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
 
 // IMPORT FROM PACKAGES
+const cors = require('cors');
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -18,6 +19,13 @@ const app = express();
 const DB = process.env.MONGODB_URL;
 //console.log('MongoDB URL:', DB);
 // middleware
+app.use(cors({
+    origin: '*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'x-auth-token'], // Add x-auth-token
+    credentials: true
+}));
+
 app.use(express.json());
 app.use(authRouter);
 app.use(sellerRouter);

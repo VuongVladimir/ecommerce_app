@@ -1,3 +1,4 @@
+import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_button.dart';
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_textfield.dart';
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/payments_details_dialog.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
@@ -13,12 +14,14 @@ class AddressScreen extends StatefulWidget {
   static const String routeName = '/address';
   final String totalAmount;
   final List<Product>? products;
+  final List<int>? selectedItems;
   final List<int>? quantities;
   const AddressScreen({
     super.key,
     required this.totalAmount,
     this.products,
     this.quantities,
+    this.selectedItems,
   });
 
   @override
@@ -129,6 +132,7 @@ class _AddressScreenState extends State<AddressScreen> {
         context: context,
         address: address,
         totalSum: double.parse(widget.totalAmount) + shippingFee,
+        selectedItems: widget.selectedItems!,
       );
     }
   }
@@ -156,6 +160,7 @@ class _AddressScreenState extends State<AddressScreen> {
         context: context,
         address: addressToBeUsed,
         totalSum: double.parse(widget.totalAmount),
+        selectedItems: widget.selectedItems!,
       );
     }
   }
@@ -265,6 +270,44 @@ class _AddressScreenState extends State<AddressScreen> {
                   ],
                 ),
               ),
+              Container(
+                width: double.infinity,
+                height: 48,
+                margin: const EdgeInsets.only(top: 15.0),
+                child: ElevatedButton(
+                  onPressed: () {
+                    if (Provider.of<UserProvider>(context, listen: false)
+                        .user
+                        .address
+                        .isEmpty) {
+                      addressServices.saveUserAddress(
+                          context: context, address: addressToBeUsed);
+                    }
+                    payPressed(address);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: GlobalVariables.primaryColor,
+                    shape: const StadiumBorder(),
+                  ),
+                  child: const Text(
+                    'Cash On Delivery',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                    ),
+                  ),
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: Text(
+                  'OR',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
               FutureBuilder<PaymentConfiguration>(
                 future: _googlePayConfigFuture,
                 builder: (context, snapshot) => snapshot.hasData
@@ -273,7 +316,7 @@ class _AddressScreenState extends State<AddressScreen> {
                         paymentConfiguration: snapshot.data!,
                         paymentItems: paymentItems,
                         type: GooglePayButtonType.buy,
-                        margin: const EdgeInsets.only(top: 15.0),
+                        //margin: const EdgeInsets.only(top: 15.0),
                         onPaymentResult: onGooglePayResult,
                         height: 75,
                         width: double.infinity,

@@ -8,6 +8,7 @@ import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/utils.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/services/seller_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +27,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   final TextEditingController quantityController = TextEditingController();
   final SellerServices sellerServices = SellerServices();
 
-  List<File> images = [];
+  List<dynamic> images = [];
   String category = 'Mobiles';
   List<String> productCategories = [
     'Mobiles',
@@ -63,7 +64,7 @@ class _AddProductScreenState extends State<AddProductScreen> {
   }
 
   void sellProduct(String sellerId) {
-    if(images.isEmpty) {
+    if (images.isEmpty) {
       showSnackBar(context, "Please select image!");
     }
     if (_addProductFormKey.currentState!.validate() && images.isNotEmpty) {
@@ -110,11 +111,17 @@ class _AddProductScreenState extends State<AddProductScreen> {
                     ? CarouselSlider(
                         items: images.map((i) {
                           return Builder(
-                            builder: (BuildContext context) => Image.file(
-                              i,
-                              fit: BoxFit.cover,
-                              height: 200,
-                            ),
+                            builder: (BuildContext context) => kIsWeb
+                                ? Image.memory(
+                                    i,
+                                    fit: BoxFit.cover,
+                                    height: 200,
+                                  )
+                                : Image.file(
+                                    i,
+                                    fit: BoxFit.cover,
+                                    height: 200,
+                                  ),
                           );
                         }).toList(),
                         options: CarouselOptions(

@@ -60,7 +60,17 @@ class _AdminScreenState extends State<AdminScreen> {
                 itemBuilder: (context) => [
                   const PopupMenuItem(
                     value: 'logout',
-                    child: Text('Log out'),
+                    child: ListTile(
+                      title: Text(
+                        'Log out',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.redAccent,
+                        ),
+                      ),
+                      leading: Icon(Icons.logout),
+                    ),
                   ),
                 ],
               ),

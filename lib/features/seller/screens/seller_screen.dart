@@ -1,3 +1,4 @@
+import 'package:ecommerce_app_fluterr_nodejs/common/widgets/bottom_bar.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/account/services/account_services.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/seller/screens/analytics_screen.dart';
@@ -68,7 +69,9 @@ class _SellerScreenState extends State<SellerScreen> {
                   //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     InkWell(
-                      onTap: () => Navigator.pushNamed(context, ShopProfileScreen.routeName, arguments: userProvider.user.id),
+                      onTap: () => Navigator.pushNamed(
+                          context, ShopProfileScreen.routeName,
+                          arguments: userProvider.user.id),
                       child: CircleAvatar(
                         radius: 25,
                         backgroundImage: NetworkImage(shopOwner!.shopAvatar),
@@ -85,18 +88,48 @@ class _SellerScreenState extends State<SellerScreen> {
                         ),
                       ),
                     ),
-                    
                     PopupMenuButton(
                       icon: const Icon(Icons.menu_rounded),
+                      position: PopupMenuPosition.under,
+                      offset: const Offset(0, 5),
                       onSelected: (value) {
-                        if (value == 'logout') {
+                        if (value == 'homepage') {
+                          Navigator.pushNamedAndRemoveUntil(
+                            context,
+                            BottomBar.routeName,
+                            (route) => false,
+                          );
+                        } else if (value == 'logout') {
                           AccountServices().logOut(context);
                         }
                       },
                       itemBuilder: (context) => [
                         const PopupMenuItem(
+                          value: 'homepage',
+                          child: ListTile(
+                            title: Text(
+                              'Return homepage',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            leading: Icon(Icons.home_outlined),
+                          ),
+                        ),
+                        const PopupMenuItem(
                           value: 'logout',
-                          child: Text('Log out'),
+                          child: ListTile(
+                            title: Text(
+                              'Log out',
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                            leading: Icon(Icons.logout),
+                          ),
                         ),
                       ],
                     ),

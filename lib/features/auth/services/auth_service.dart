@@ -80,18 +80,11 @@ class AuthService {
               Provider.of<UserProvider>(context, listen: false);
           Navigator.pushNamedAndRemoveUntil(
             context,
-            (userProvider.user.type == "user")
-                ? BottomBar.routeName
-                : (userProvider.user.type == "seller")
-                    ? SellerScreen.routeName
-                    : AdminScreen.routeName,
+            (userProvider.user.type == "admin")
+                ? AdminScreen.routeName
+                : BottomBar.routeName,
             (route) => false,
           );
-          // Navigator.pushNamedAndRemoveUntil(
-          //   context,
-          //   BottomBar.routeName,
-          //   (route) => false,
-          // );
         },
       );
     } catch (e) {

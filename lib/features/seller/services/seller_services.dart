@@ -11,6 +11,7 @@ import 'package:ecommerce_app_fluterr_nodejs/models/order.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/product.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/user.dart';
 import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
@@ -21,16 +22,31 @@ class SellerServices {
     required String shopName,
     required String shopDescription,
     required String address,
-    required File avatar,
+    required dynamic avatar,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     String status = '';
     try {
       // Upload avatar to cloudinary
       final cloudinary = CloudinaryPublic('dvgeq2l6e', 'xuvwiao4');
-      CloudinaryResponse avatarRes = await cloudinary.uploadFile(
-        CloudinaryFile.fromFile(avatar.path, folder: shopName),
+    CloudinaryResponse avatarRes;
+    
+    if (kIsWeb) {
+      // Xử lý cho web platform
+      avatarRes = await cloudinary.uploadFile(
+        CloudinaryFile.fromBytesData(
+          avatar, // Uint8List data
+          identifier: 'shop_avatar_${DateTime.now().millisecondsSinceEpoch}', 
+          folder: shopName,
+          resourceType: CloudinaryResourceType.Image,
+        ),
       );
+    } else {
+      // Xử lý cho mobile platform
+      avatarRes = await cloudinary.uploadFile(
+        CloudinaryFile.fromFile((avatar as File).path, folder: shopName),
+      );
+    }
       
       http.Response res = await http.post(
         Uri.parse('$uri/api/register-seller'),
@@ -95,7 +111,7 @@ class SellerServices {
     required double price,
     required int quantity,
     required String category,
-    required List<File> images,
+    required List<dynamic> images,
     required String sellerId,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
@@ -103,12 +119,27 @@ class SellerServices {
       // ko luu anh tren mongodb vi dung luong kha it(shared clutter),luu anh tren cloudinary
       final cloudinary = CloudinaryPublic('dvgeq2l6e', 'xuvwiao4');
       List<String> imageUrls = [];
-      for (int i = 0; i < images.length; i++) {
-        CloudinaryResponse res = await cloudinary.uploadFile(
-          CloudinaryFile.fromFile(images[i].path, folder: name),
+    
+    for (int i = 0; i < images.length; i++) {
+      CloudinaryResponse res;
+      if (kIsWeb) {
+        // Xử lý cho web platform
+        res = await cloudinary.uploadFile(
+          CloudinaryFile.fromBytesData(
+            images[i], // Uint8List data
+            identifier: 'product_image_${DateTime.now().millisecondsSinceEpoch}_$i',
+            folder: name,
+            resourceType: CloudinaryResourceType.Image,
+          ),
         );
-        imageUrls.add(res.secureUrl);
+      } else {
+        // Xử lý cho mobile platform
+        res = await cloudinary.uploadFile(
+          CloudinaryFile.fromFile((images[i] as File).path, folder: name),
+        );
       }
+      imageUrls.add(res.secureUrl);
+    }
       Product product = Product(
         name: name,
         description: description,
@@ -304,7 +335,7 @@ class SellerServices {
     required double price,
     required int quantity,
     required String category,
-    required List<File> newImages,
+    required List<dynamic> newImages,
   }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
@@ -313,12 +344,26 @@ class SellerServices {
         // ko luu anh tren mongodb vi dung luong kha it(shared clutter),luu anh tren cloudinary
         final cloudinary = CloudinaryPublic('dvgeq2l6e', 'xuvwiao4');
 
-        for (int i = 0; i < images.length; i++) {
-          CloudinaryResponse res = await cloudinary.uploadFile(
-            CloudinaryFile.fromFile(newImages[i].path, folder: name),
+        for (int i = 0; i < newImages.length; i++) {
+        CloudinaryResponse res;
+        if (kIsWeb) {
+          // Xử lý cho web platform
+          res = await cloudinary.uploadFile(
+            CloudinaryFile.fromBytesData(
+              newImages[i],
+              identifier: 'product_${product.name}_${DateTime.now().millisecondsSinceEpoch}_$i',
+              folder: name,
+              resourceType: CloudinaryResourceType.Image,
+            ),
           );
-          newImageUrls.add(res.secureUrl);
+        } else {
+          // Xử lý cho mobile platform
+          res = await cloudinary.uploadFile(
+            CloudinaryFile.fromFile((newImages[i] as File).path, folder: name),
+          );
         }
+        newImageUrls.add(res.secureUrl);
+      }
       }
       List<String> updateImages =
           (newImageUrls.isNotEmpty) ? newImageUrls : images;

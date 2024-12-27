@@ -31,60 +31,68 @@ class _OrdersState extends State<Orders> {
   Widget build(BuildContext context) {
     return orderList == null
         ? const Center(child: CircularProgressIndicator())
-        : Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    padding: const EdgeInsets.only(left: 15),
-                    child: const Text(
-                      'Your Orders',
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        : orderList!.isEmpty
+            ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.inbox_outlined,
+                      size: 120,
+                      color: Colors.grey[400],
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(right: 15),
-                    child: Text(
-                      'See all',
-                      style:
-                          TextStyle(color: GlobalVariables.selectedNavBarColor),
+                    const SizedBox(height: 16),
+                    const Text(
+                      'No Orders Yet!',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    const Text(
+                      'Your orders will appear here',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Column(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.all(15),
+                      child: GridView.builder(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2, // Số cột
+                          childAspectRatio: 1, // Tỷ lệ khung hình
+                          crossAxisSpacing: 10, // Khoảng cách giữa các cột
+                          mainAxisSpacing: 10, // Khoảng cách giữa các hàng
+                        ),
+                        itemCount: orderList!.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                OrderDetailsScreens.routeName,
+                                arguments: orderList![index],
+                              );
+                            },
+                            child: SingleProduct(
+                              image: orderList![index].products[0].images[0],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                   ),
                 ],
-              ),
-              // Thay thế Container cũ bằng Expanded và GridView
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2, // Số cột
-                      childAspectRatio: 1, // Tỷ lệ khung hình
-                      crossAxisSpacing: 10, // Khoảng cách giữa các cột
-                      mainAxisSpacing: 10, // Khoảng cách giữa các hàng
-                    ),
-                    itemCount: orderList!.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            OrderDetailsScreens.routeName,
-                            arguments: orderList![index],
-                          );
-                        },
-                        child: SingleProduct(
-                          image: orderList![index].products[0].images[0],
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-            ],
-          );
+              );
   }
 }

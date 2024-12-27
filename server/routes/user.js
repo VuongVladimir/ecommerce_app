@@ -73,20 +73,26 @@ userRouter.post("/api/order", auth, async (req, res) => {
     try {
         const { cart, totalPrice, address } = req.body;
         let products = [];
+        let user = await User.findById(req.user);
+        // Tạo Set chứa ID của các sản phẩm được đặt hàng để dễ so sánh
+        const orderedProductIds = new Set(cart.map(item => item.product._id));
+        // Xử lý đặt hàng
         for (let i = 0; i < cart.length; i++) {
             let product = await Product.findById(cart[i].product._id);
             if (product.quantity >= cart[i].quantity) {
                 product.quantity -= cart[i].quantity;
                 products.push({ product, quantity: cart[i].quantity });
                 await product.save();
-            }
-            else {
+            } else {
                 return res.status(400).json({ msg: `${product.name} is out of stock!` });
             }
         }
-        let user = await User.findById(req.user);
-        user.cart = [];
+
+        // Lọc giỏ hàng để giữ lại những sản phẩm không được đặt
+        user.cart = user.cart.filter(item => !orderedProductIds.has(item.product._id.toString()));
         user = await user.save();
+
+        // Tạo đơn hàng mới
         let order = new Order({
             products,
             totalPrice,
@@ -215,7 +221,7 @@ userRouter.delete("/api/notifications/:id", auth, async (req, res) => {
 });
 
 // Delete all notifications for user
-userRouter.delete("/api/notifications/delete-all", auth, async (req, res) => {
+userRouter.delete("/api/notifications-all", auth, async (req, res) => {
     try {
         await Notification.deleteMany({ userId: req.user });
         res.json({ msg: "All notifications deleted successfully" });
@@ -225,7 +231,7 @@ userRouter.delete("/api/notifications/delete-all", auth, async (req, res) => {
 });
 
 // Add option to clear notifications older than X days
-userRouter.delete("/api/notifications/clear-old", auth, async (req, res) => {
+userRouter.delete("/api/notifications-old", auth, async (req, res) => {
     try {
         const daysOld = req.query.days || 30; // Default to 30 days
         const dateThreshold = new Date();

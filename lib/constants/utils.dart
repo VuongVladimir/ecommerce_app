@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show Uint8List, kIsWeb;
 
 void showSnackBar(BuildContext context, String text) {
   ScaffoldMessenger.of(context).showSnackBar(
@@ -11,16 +12,22 @@ void showSnackBar(BuildContext context, String text) {
   );
 }
 
-Future<List<File>> pickImages() async {
-  List<File> images = [];
+Future<List<dynamic>> pickImages() async {
+  List<dynamic> images = [];
   try {
     var files = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: true,
+      withData: true,
+      allowCompression: true,
     );
     if (files != null && files.files.isNotEmpty) {
       for (int i = 0; i < files.files.length; i++) {
-        images.add(File(files.files[i].path!));
+        if (kIsWeb) {
+          images.add(files.files[i].bytes!);
+        } else {
+          images.add(File(files.files[i].path!));
+        }
       }
     }
   } catch (e) {
@@ -29,18 +36,23 @@ Future<List<File>> pickImages() async {
   return images;
 }
 
-Future<File?> pickImage() async {
-  File? image ;
+Future<dynamic> pickImage() async {
   try {
     var result = await FilePicker.platform.pickFiles(
       type: FileType.image,
       allowMultiple: false,
+      withData: true,
+      allowCompression: true,
     );
     if (result != null && result.files.isNotEmpty) {
-      image = File(result.files.first.path!); 
+      if (kIsWeb) {
+        return result.files.first.bytes!;
+      } else {
+        return File(result.files.first.path!);
+      }
     }
   } catch (e) {
     debugPrint(e.toString());
   }
-  return image;
+  return null;
 }

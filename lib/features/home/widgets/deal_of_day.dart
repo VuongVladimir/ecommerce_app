@@ -51,10 +51,18 @@ class _DealOfDayState extends State<DealOfDay> {
         product.discount?.endDate == null) {
       return false;
     }
-    final now = DateTime.now();
-    return now.isAfter(product.discount!.startDate!) &&
-        now.isBefore(product.discount!.endDate!);
-  }
+    
+    // Convert to UTC for comparison
+    final now = DateTime.now().toUtc();
+    final start = product.discount!.startDate!.toUtc();
+    final end = product.discount!.endDate!.toUtc();
+    
+    print("Now: $now");
+    print("Start: $start"); 
+    print("End: $end");
+    
+    return now.isAfter(start) && now.isBefore(end);
+}
 
   Widget _buildDiscountBadge(Product product) {
     return Container(

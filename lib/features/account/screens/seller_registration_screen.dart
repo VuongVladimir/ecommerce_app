@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:ecommerce_app_fluterr_nodejs/constants/utils.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_button.dart';
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_textfield.dart';
@@ -23,7 +24,7 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
   final TextEditingController _addressController = TextEditingController();
   final SellerServices sellerServices = SellerServices();
   String? requestStatus;
-  File? avatarImage;
+  dynamic avatarImage;
 
   final _registrationFormKey = GlobalKey<FormState>();
 
@@ -44,9 +45,11 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
 
   void selectImage() async {
     var res = await pickImage();
-    setState(() {
-      avatarImage = res;
-    });
+    if (res != null) {
+      setState(() {
+        avatarImage = res;
+      });
+    }
   }
 
   void checkRequestStatus() async {
@@ -57,7 +60,7 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
   }
 
   void registerSeller() async {
-    if(avatarImage == null) {
+    if (avatarImage == null) {
       showSnackBar(context, "Please pick image!");
     }
     if (_registrationFormKey.currentState!.validate() && avatarImage != null) {
@@ -132,12 +135,19 @@ class _SellerRegistrationScreenState extends State<SellerRegistrationScreen> {
                       GestureDetector(
                         onTap: selectImage,
                         child: avatarImage != null
-                            ? Image.file(
-                                avatarImage!,
-                                height: 150,
-                                width: 150,
-                                fit: BoxFit.cover,
-                              )
+                            ? kIsWeb
+                                ? Image.memory(
+                                    avatarImage,
+                                    height: 150,
+                                    width: 150,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Image.file(
+                                    avatarImage,
+                                    height: 150,
+                                    width: 150,
+                                    fit: BoxFit.cover,
+                                  )
                             : DottedBorder(
                                 borderType: BorderType.RRect,
                                 radius: const Radius.circular(10),

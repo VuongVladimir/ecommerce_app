@@ -168,7 +168,7 @@ class AccountServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.delete(
-        Uri.parse('$uri/api/notifications/delete-all'),
+        Uri.parse('$uri/api/notifications-all'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -191,7 +191,7 @@ class AccountServices {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
     try {
       http.Response res = await http.delete(
-        Uri.parse('$uri/api/notifications/clear-old?days=$days'),
+        Uri.parse('$uri/api/notifications-old?days=$days'),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,

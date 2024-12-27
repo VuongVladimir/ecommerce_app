@@ -68,11 +68,9 @@ class _MyAppState extends State<MyApp> {
       ),
       onGenerateRoute: (settings) => generateRoute(settings),
       home: (Provider.of<UserProvider>(context).user.token.isNotEmpty)
-          ? (Provider.of<UserProvider>(context).user.type == "user")
-              ? const BottomBar()
-              : (Provider.of<UserProvider>(context).user.type == "seller")
-                  ? const SellerScreen()
-                  : const AdminScreen()
+          ? (Provider.of<UserProvider>(context).user.type == "admin")
+              ? const AdminScreen() 
+              : const BottomBar()
           : const AuthScreen(),
     );
   }

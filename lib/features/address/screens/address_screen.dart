@@ -1,4 +1,3 @@
-import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_button.dart';
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/custom_textfield.dart';
 import 'package:ecommerce_app_fluterr_nodejs/common/widgets/payments_details_dialog.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
@@ -276,6 +275,7 @@ class _AddressScreenState extends State<AddressScreen> {
                 margin: const EdgeInsets.only(top: 15.0),
                 child: ElevatedButton(
                   onPressed: () {
+                    payPressed(address);
                     if (Provider.of<UserProvider>(context, listen: false)
                         .user
                         .address
@@ -283,7 +283,6 @@ class _AddressScreenState extends State<AddressScreen> {
                       addressServices.saveUserAddress(
                           context: context, address: addressToBeUsed);
                     }
-                    payPressed(address);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: GlobalVariables.primaryColor,

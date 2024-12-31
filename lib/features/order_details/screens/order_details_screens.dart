@@ -131,159 +131,244 @@ class _OrderDetailsScreensState extends State<OrderDetailsScreens> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 'View order details',
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.grey[800],
                 ),
               ),
+              const SizedBox(height: 12),
               Container(
-                padding: const EdgeInsets.all(8),
-                width: double.infinity,
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black12,
-                  ),
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 10,
+                    ),
+                  ],
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'Order Date:      ${DateFormat().format(
+                    _buildOrderInfoRow(
+                      'Order date:',
+                      DateFormat('dd/MM/yyyy HH:mm').format(
                         DateTime.fromMillisecondsSinceEpoch(
                             widget.order.orderedAt),
-                      )}',
+                      ),
                     ),
-                    Text('Order ID:          ${widget.order.id}'),
-                    Text('Order Total:      \$${widget.order.totalPrice}'),
+                    const SizedBox(height: 8),
+                    _buildOrderInfoRow('Order ID:', widget.order.id),
+                    const SizedBox(height: 8),
+                    _buildOrderInfoRow(
+                      'Order Total:',
+                      '\$${widget.order.totalPrice.toStringAsFixed(2)}',
+                      valueColor: Colors.green,
+                    ),
+                    const SizedBox(height: 8),
+                    _buildOrderInfoRow(
+                        'Shipping address:', widget.order.address),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
-              const Text(
+              const SizedBox(height: 24),
+              // Purchase Details Section
+              Text(
                 'Purchase Details',
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.grey[800],
                 ),
               ),
-              Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black12,
-                  ),
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    for (int i = 0; i < widget.order.products.length; i++)
-                      Row(
-                        children: [
-                          Image.network(
-                            widget.order.products[i].images[0],
-                            height: 120,
-                            width: 120,
+              const SizedBox(height: 12),
+              ListView.separated(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: widget.order.products.length,
+                separatorBuilder: (context, index) => const Divider(),
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.1),
+                          spreadRadius: 1,
+                          blurRadius: 10,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            widget.order.products[index].images[0],
+                            height: 100,
+                            width: 100,
+                            fit: BoxFit.cover,
                           ),
-                          const SizedBox(width: 5),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  widget.order.products[i].name,
-                                  style: const TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
+                        ),
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                widget.order.products[index].name,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
                                 ),
-                                Text(
-                                  'Quantity: ${widget.order.quantity[i]}',
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                'Quantity: ${widget.order.quantity[index]}',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 14,
                                 ),
-                              ],
-                            ),
+                              ),
+                              const SizedBox(height: 4),
+                              Text(
+                                'Price: \$${widget.order.products[index].price}',
+                                style: const TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                  ],
-                ),
+                        ),
+                      ],
+                    ),
+                  );
+                },
               ),
-              const SizedBox(height: 10),
-              const Text(
+
+              const SizedBox(height: 24),
+              // Tracking Section
+              Text(
                 'Tracking',
                 style: TextStyle(
-                  fontSize: 22,
+                  fontSize: 24,
                   fontWeight: FontWeight.bold,
+                  color: Colors.grey[800],
                 ),
               ),
+              const SizedBox(height: 12),
               Container(
                 decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black12,
-                  ),
-                ),
-                child: Stepper(
-                  currentStep: currentStep,
-                  controlsBuilder: (context, details) {
-                    if (user.type == 'seller' && currentStep < 3) {
-                      return CustomButton(
-                        text: 'Done',
-                        function: () => changeOrderStatus(),
-                      );
-                    }
-                    return const SizedBox();
-                  },
-                  steps: [
-                    Step(
-                      title: const Text('Pending'),
-                      content: const Text(
-                        'Your order is yet to be delivered',
-                      ),
-                      isActive: currentStep >= 0,
-                      state: currentStep > 0
-                          ? StepState.complete
-                          : StepState.indexed,
-                    ),
-                    Step(
-                      title: const Text('Completed'),
-                      content: const Text(
-                        'Your order has been delivered, you are yet to sign.',
-                      ),
-                      isActive: currentStep >= 1,
-                      state: currentStep > 1
-                          ? StepState.complete
-                          : StepState.indexed,
-                    ),
-                    Step(
-                      title: const Text('Received'),
-                      content: const Text(
-                        'Your order has been delivered and signed by you.',
-                      ),
-                      isActive: currentStep >= 2,
-                      state: currentStep > 2
-                          ? StepState.complete
-                          : StepState.indexed,
-                    ),
-                    Step(
-                      title: const Text('Delivered'),
-                      content: const Text(
-                        'Your order has been delivered and signed by you!',
-                      ),
-                      isActive: currentStep >= 3,
-                      state: currentStep >= 3
-                          ? StepState.complete
-                          : StepState.indexed,
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 10,
                     ),
                   ],
+                ),
+                child: Theme(
+                  data: Theme.of(context).copyWith(
+                    colorScheme: const ColorScheme.light(
+                      primary: GlobalVariables.secondaryColor,
+                    ),
+                  ),
+                  child: Stepper(
+                    currentStep: currentStep,
+                    controlsBuilder: (context, details) {
+                      if (user.type == 'seller' && currentStep < 3) {
+                        return CustomButton(
+                          text: 'Done',
+                          function: () => changeOrderStatus(),
+                        );
+                      }
+                      return const SizedBox();
+                    },
+                    steps: [
+                      Step(
+                        title: const Text('Pending'),
+                        content: const Text(
+                          'Your order is yet to be delivered',
+                        ),
+                        isActive: currentStep >= 0,
+                        state: currentStep > 0
+                            ? StepState.complete
+                            : StepState.indexed,
+                      ),
+                      Step(
+                        title: const Text('Completed'),
+                        content: const Text(
+                          'Your order has been delivered, you are yet to sign.',
+                        ),
+                        isActive: currentStep >= 1,
+                        state: currentStep > 1
+                            ? StepState.complete
+                            : StepState.indexed,
+                      ),
+                      Step(
+                        title: const Text('Received'),
+                        content: const Text(
+                          'Your order has been delivered and signed by you.',
+                        ),
+                        isActive: currentStep >= 2,
+                        state: currentStep > 2
+                            ? StepState.complete
+                            : StepState.indexed,
+                      ),
+                      Step(
+                        title: const Text('Delivered'),
+                        content: const Text(
+                          'Your order has been delivered and signed by you!',
+                        ),
+                        isActive: currentStep >= 3,
+                        state: currentStep >= 3
+                            ? StepState.complete
+                            : StepState.indexed,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildOrderInfoRow(String label, String value, {Color? valueColor}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[600],
+          ),
+        ),
+        Text(
+          value,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: valueColor ?? Colors.grey[800],
+          ),
+        ),
+      ],
     );
   }
 }

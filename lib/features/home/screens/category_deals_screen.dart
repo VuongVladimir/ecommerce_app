@@ -92,25 +92,6 @@ class _CategoryDealsScreenState extends State<CategoryDealsScreen> {
                             arguments: product,
                           );
                         },
-                        // child: Column(
-                        //   children: [
-                        //     // SizedBox(
-                        //     //   height: 140,
-                        //     //   child: SingleProduct(image: productData.images[0]),
-                        //     // ),
-                        //     Flexible(
-                        //         child: SingleProduct(image: product.images[0])),
-                        //     Container(
-                        //       alignment: Alignment.topLeft,
-                        //       padding: const EdgeInsets.only(left: 11),
-                        //       child: Text(
-                        //         product.name,
-                        //         overflow: TextOverflow.ellipsis,
-                        //         maxLines: 2,
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
                         child: ProductCard(product: product),
                       );
                     },

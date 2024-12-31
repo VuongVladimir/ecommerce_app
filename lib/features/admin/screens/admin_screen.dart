@@ -1,9 +1,9 @@
 import 'package:ecommerce_app_fluterr_nodejs/features/account/services/account_services.dart';
+import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/best_sellers_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/seller_requests_screen.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/sellers_screen.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/screens/analytics_screen.dart';
 
 class AdminScreen extends StatefulWidget {
   static const String routeName = '/admin-screen';
@@ -21,7 +21,7 @@ class _AdminScreenState extends State<AdminScreen> {
   List<Widget> pages = [
     const SellerRequestsScreen(),
     const SellersScreen(),
-    const AnalyticsScreen(),
+    const BestSellersScreen(),
   ];
 
   void updatePage(int page) {
@@ -136,7 +136,7 @@ class _AdminScreenState extends State<AdminScreen> {
               ),
               child: const Icon(Icons.analytics),
             ),
-            label: 'Analytics',
+            label: 'Best Sellers',
           ),
         ],
       ),

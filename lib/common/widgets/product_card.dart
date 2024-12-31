@@ -26,7 +26,7 @@ class ProductCard extends StatelessWidget {
           children: [
             // Image section with gradient overlay
             SizedBox(
-              height: constraints.maxHeight * 0.6,
+              height: constraints.maxHeight * 0.55,
               child: Stack(
                 children: [
                   Container(
@@ -111,7 +111,7 @@ class ProductCard extends StatelessWidget {
             // Info section
             Expanded(
               child: Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(8),
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.vertical(
@@ -122,14 +122,16 @@ class ProductCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(
-                      product.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                    Flexible(
+                      child: Text(
+                        product.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 13,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 6),
                     Row(
@@ -138,7 +140,7 @@ class ProductCard extends StatelessWidget {
                           '\$${product.finalPrice.toStringAsFixed(2)}',
                           style: const TextStyle(
                             color: Colors.red,
-                            fontSize: 16,
+                            fontSize: 14,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
@@ -150,7 +152,7 @@ class ProductCard extends StatelessWidget {
                               style: const TextStyle(
                                 decoration: TextDecoration.lineThrough,
                                 color: Colors.grey,
-                                fontSize: 12,
+                                fontSize: 11,
                               ),
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -163,7 +165,7 @@ class ProductCard extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.inventory_2_outlined,
-                          size: 14,
+                          size: 12,
                           color: Colors.grey[600],
                         ),
                         const SizedBox(width: 4),
@@ -171,7 +173,7 @@ class ProductCard extends StatelessWidget {
                           'Stock: ${product.quantity}',
                           style: TextStyle(
                             color: Colors.grey[600],
-                            fontSize: 12,
+                            fontSize: 11,
                           ),
                         ),
                       ],

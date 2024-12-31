@@ -6,7 +6,7 @@ import 'package:ecommerce_app_fluterr_nodejs/constants/error_handling.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/global_variables.dart';
 import 'package:ecommerce_app_fluterr_nodejs/constants/utils.dart';
 import 'package:ecommerce_app_fluterr_nodejs/features/admin/models/seller_request.dart';
-import 'package:ecommerce_app_fluterr_nodejs/features/admin/models/seller_stats.dart';
+import 'package:ecommerce_app_fluterr_nodejs/models/seller_stats.dart';
 import 'package:ecommerce_app_fluterr_nodejs/models/user.dart';
 import 'package:ecommerce_app_fluterr_nodejs/providers/user_provider.dart';
 
@@ -24,21 +24,21 @@ class AdminServices {
       );
 
       httpErrorHandle(
-      response: res,
-      context: context,
-      onSuccess: () {
-        var decodedData = jsonDecode(res.body) as List;
-        requests = decodedData.map((item) {
-          // Ensure createdAt is in the correct format
-          if (item['createdAt'] is Map) {
-            item['createdAt'] = DateTime.fromMillisecondsSinceEpoch(
-              item['createdAt']['\$date'],
-            ).toIso8601String();
-          }
-          return SellerRequest.fromMap(item);
-        }).toList();
-      },
-    );
+        response: res,
+        context: context,
+        onSuccess: () {
+          var decodedData = jsonDecode(res.body) as List;
+          requests = decodedData.map((item) {
+            // Ensure createdAt is in the correct format
+            if (item['createdAt'] is Map) {
+              item['createdAt'] = DateTime.fromMillisecondsSinceEpoch(
+                item['createdAt']['\$date'],
+              ).toIso8601String();
+            }
+            return SellerRequest.fromMap(item);
+          }).toList();
+        },
+      );
     } catch (e) {
       showSnackBar(context, e.toString());
     }
@@ -130,12 +130,21 @@ class AdminServices {
     }
   }
 
-  Future<SellerStats> getSellerStats(BuildContext context) async {
+  Future<List<SellerStats>> getBestSellers({
+    required BuildContext context,
+    required int month,
+    required int year,
+    String? category,
+  }) async {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-    SellerStats stats = SellerStats(totalSellers: 0, pendingRequests: 0);
     try {
+      String url = '$uri/admin/best-sellers?month=$month&year=$year';
+      if (category != null) {
+        url += '&category=$category';
+      }
+
       http.Response res = await http.get(
-        Uri.parse('$uri/admin/seller-stats'),
+        Uri.parse(url),
         headers: {
           'Content-Type': 'application/json; charset=UTF-8',
           'x-auth-token': userProvider.user.token,
@@ -145,13 +154,17 @@ class AdminServices {
       httpErrorHandle(
         response: res,
         context: context,
-        onSuccess: () {
-          stats = SellerStats.fromMap(jsonDecode(res.body));
-        },
+        onSuccess: () {},
       );
+
+      List<SellerStats> sellers = (jsonDecode(res.body) as List)
+          .map((data) => SellerStats.fromMap(data))
+          .toList();
+
+      return sellers;
     } catch (e) {
       showSnackBar(context, e.toString());
+      return [];
     }
-    return stats;
   }
 }

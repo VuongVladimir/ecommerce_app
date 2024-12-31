@@ -240,8 +240,8 @@ class _DealOfDayState extends State<DealOfDay> {
   }
 
   Widget _buildDealsList() {
-    return Container(
-      height: 200,
+    return SizedBox(
+      height: 220,
       child: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 12),
         scrollDirection: Axis.horizontal,

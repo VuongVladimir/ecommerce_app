@@ -351,7 +351,8 @@ class _OrderDetailsScreensState extends State<OrderDetailsScreens> {
 
   Widget _buildOrderInfoRow(String label, String value, {Color? valueColor}) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment:
+          CrossAxisAlignment.start, // Thêm để căn chỉnh khi text wrap
       children: [
         Text(
           label,
@@ -360,12 +361,18 @@ class _OrderDetailsScreensState extends State<OrderDetailsScreens> {
             color: Colors.grey[600],
           ),
         ),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: valueColor ?? Colors.grey[800],
+        const SizedBox(width: 8), // Thêm khoảng cách giữa label và value
+        Expanded(
+          // Wrap Text trong Expanded
+          child: Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+              color: valueColor ?? Colors.grey[800],
+            ),
+            textAlign: TextAlign.right, // Căn phải cho value
+            softWrap: true, // Cho phép text wrap xuống dòng
           ),
         ),
       ],

@@ -123,7 +123,7 @@ class _SetAddressScreenState extends State<SetAddressScreen> {
                   String newAddress = "";
                   if (_addressFormKey.currentState!.validate()) {
                     newAddress =
-                        '${flatBuildingController.text}, ${areaController.text}, ${cityController.text} - ${pincodeController.text}';
+                        '${flatBuildingController.text}, ${areaController.text}, District ${pincodeController.text}, ${cityController.text}';
                     addressServices.saveUserAddress(
                         context: context, address: newAddress);
                   } else {

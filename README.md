@@ -31,6 +31,5 @@ Revos E-commerce App is a comprehensive e-commerce platform built using modern t
 - **Database**: MongoDB, Firebase, Cloudinary
 
 ---
-#### Link download apk
-
-[https://drive.google.com/file/d/1qfuceE-AbRGKOSjshWZ21vauKPv8Pjpm/view](https://drive.google.com/file/d/1qfuceE-AbRGKOSjshWZ21vauKPv8Pjpm/view)
+## Link download apk
+```https://drive.google.com/file/d/1AtGugnK8D8GRCiz3xx7frYbMTgZsFWmB/view?usp=drive_link```

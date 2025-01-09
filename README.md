@@ -32,4 +32,5 @@ Revos E-commerce App is a comprehensive e-commerce platform built using modern t
 
 ---
 ## Link download apk
-```https://drive.google.com/file/d/1AtGugnK8D8GRCiz3xx7frYbMTgZsFWmB/view?usp=drive_link```
+  ```bash
+https://drive.google.com/file/d/1AtGugnK8D8GRCiz3xx7frYbMTgZsFWmB/view?usp=drive_link
